@@ -106,7 +106,7 @@ exports.handler = async (event) => {
     await store.set(orderId, JSON.stringify(orderData));
 
     // === 5. CRIAR PREFERÊNCIA NO MERCADO PAGO ===
-    const origin = event.headers.origin || 'https://skincareprostore.netlify.app';
+    const origin = event.headers.origin || 'https://bright-lebkuchen-820667.netlify.app';
 
     const preferenceBody = {
       items: validatedItems,
