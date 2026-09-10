@@ -11,7 +11,6 @@
 // 8. Retornar apenas preferenceId + orderId ao frontend
 // ===================================================================
 
-const { getStore } = require('netlify:blob');
 const { PRODUCTS } = require('./products');
 
 const MP_PREFERENCE_URL = 'https://api.mercadopago.com/checkout/preferences';
