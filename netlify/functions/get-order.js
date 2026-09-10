@@ -4,7 +4,7 @@
 // NUNCA confia em parâmetros de URL (?status=success).
 // ===================================================================
 
-const { getStore } = require('netlify:blob');
+const { getStore } = require('@netlify/blobs');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'GET') {
