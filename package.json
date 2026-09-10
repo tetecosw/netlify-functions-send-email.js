@@ -2,9 +2,10 @@
   "name": "skincare-pro-store",
   "version": "1.0.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
+    "mercadopago": "^1.5.17",
     "nodemailer": "^6.9.9"
   }
 }
