@@ -1,12 +1,6 @@
 [build]
+  publish = "."
   functions = "netlify/functions"
 
-[[redirects]]
-  from = "/webhook"
-  to = "/.netlify/functions/webhook"
-  status = 200
-
-[[redirects]]
-  from = "/get-order"
-  to = "/.netlify/functions/get-order"
-  status = 200
+[functions]
+  node_bundler = "esbuild"
