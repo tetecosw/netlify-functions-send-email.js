@@ -1,58 +1,66 @@
 const mercadopago = require('mercadopago');
-const nodemailer = require('nodemailer');
 
-// Configuração do Mercado Pago usando sua variável de ambiente do Netlify
+// Configuração do Mercado Pago
 mercadopago.configure({
   access_token: process.env.MP_ACCESS_TOKEN 
 });
 
 exports.handler = async (event, context) => {
-  // Segurança: Permitir apenas requisições POST
+  // Cabeçalhos para evitar erros de CORS
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json'
+  };
+
+  // Responde rapidamente a requisições de verificação (OPTIONS)
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
   if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: 'Método não permitido' }),
-    };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Método não permitido' }) };
   }
 
   try {
     const data = JSON.parse(event.body);
 
-    // Estrutura da Preferência de Compra
+    // Validação básica dos dados recebidos
+    if (!data.items || !data.origin) {
+      throw new Error('Dados insuficientes para criar a preferência.');
+    }
+
     const preference = {
-      items: data.items, // Array com nome, preço e quantidade
-      payer: data.payer, // Dados do comprador (email, nome)
-      external_reference: data.external_reference || 'venda_lp_001',
+      items: data.items,
+      payer: data.payer,
+      external_reference: data.external_reference || 'SKP_ORDER',
       back_urls: {
-        success: `${data.origin}/sucesso`,
-        failure: `${data.origin}/erro`,
-        pending: `${data.origin}/pendente`
+        success: `${data.origin}/?status=success`,
+        failure: `${data.origin}/?status=failure`,
+        pending: `${data.origin}/?status=pending`
       },
       auto_return: 'approved',
-      binary_mode: true // Evita pagamentos pendentes que exigem ação manual
+      binary_mode: true,
+      statement_descriptor: 'SKINCAREPRO'
     };
 
-    // Criação da preferência no Mercado Pago
     const response = await mercadopago.preferences.create(preference);
 
     return {
       statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({ 
         preferenceId: response.body.id,
-        init_point: response.body.init_point // Link para o Checkout Pro
+        init_point: response.body.init_point 
       }),
     };
   } catch (error) {
-    console.error('Erro ao criar preferência:', error);
+    console.error('Erro na Function:', error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ 
-        error: 'Erro interno ao processar o pagamento',
-        details: error.message 
-      }),
+      headers,
+      body: JSON.stringify({ error: 'Erro ao processar pagamento', details: error.message }),
     };
   }
 };
