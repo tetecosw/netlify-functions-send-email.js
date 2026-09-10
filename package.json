@@ -2,11 +2,10 @@
   "name": "skincare-pro-store",
   "version": "1.0.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=18"
   },
   "dependencies": {
-    "mercadopago": "^1.5.17",
+    "@netlify/blobs": "^11.0.3",
     "nodemailer": "^6.9.9"
-    "@netlify/blobs": "^..."
   }
 }
