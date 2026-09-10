@@ -7,5 +7,6 @@
   "dependencies": {
     "mercadopago": "^1.5.17",
     "nodemailer": "^6.9.9"
+    "@netlify/blobs": "^..."
   }
 }
