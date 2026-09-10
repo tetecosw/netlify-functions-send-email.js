@@ -525,7 +525,7 @@
   <script>
     // ====== SDK MERCADO PAGO ======
     // APP_USR-2ec19537-ade1-47cb-a5d3-477b4ae66b7d
-    const mp = new MercadoPago('SEU_PUBLIC_KEY', { locale: 'pt-BR' });
+    const mp = new MercadoPago(('APP_USR-60627771-7004-469b-8321-72998394469b',{locale: 'pt-BR'});
 
     // ====== ESTADO DO CARRINHO ======
     let cart = [];
@@ -642,94 +642,54 @@
     let checkoutBtn = document.getElementById('checkoutBtn');
 
     async function abrirPagamento() {
-      var nome = document.getElementById('customerName').value.trim();
-      var email = document.getElementById('customerEmail').value.trim();
-      var telefone = document.getElementById('customerPhone').value.trim();
+  var nome = document.getElementById('customerName').value.trim();
+  var email = document.getElementById('customerEmail').value.trim();
+  var telefone = document.getElementById('customerPhone').value.trim();
 
-      if (!nome || !email || !telefone) {
-        alert('Por favor, preencha seu nome, e-mail e WhatsApp para finalizar o pedido.');
-        return;
-      }
-      if (cart.length === 0) {
-        alert('Seu carrinho está vazio. Adicione produtos antes de finalizar.');
-        return;
-      }
+  if (!nome || !email || !telefone) {
+    alert('Por favor, preencha seu nome, e-mail e WhatsApp.');
+    return;
+  }
+  if (cart.length === 0) {
+    alert('Seu carrinho está vazio.');
+    return;
+  }
 
-      var pedidoId = gerarPedidoId();
-      checkoutBtn.textContent = 'Iniciando pagamento...';
-      checkoutBtn.disabled = true;
+  var pedidoId = gerarPedidoId();
+  checkoutBtn.textContent = 'Iniciando pagamento...';
+  checkoutBtn.disabled = true;
 
-      try {
-        var response = await fetch('/.netlify/functions/create-preference', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            items: cart.map(function(item) {
-              return {
-                id: item.name.replace(/\s+/g, '-').toLowerCase(),
-                title: item.name,
-                description: 'Produto estético original — Skincare Pro Store',
-                quantity: item.qty,
-                unit_price: item.price,
-                currency_id: 'BRL'
-              };
-            }),
-            payer: { name: nome, email: email, phone: { number: telefone } },
-            external_reference: pedidoId,
-            statement_descriptor: 'SKINCAREPROSTORE',
-            back_urls: {
-              success: window.location.origin + '/?status=success',
-              pending: window.location.origin + '/?status=pending',
-              failure: window.location.origin + '/?status=failure'
-            },
-            auto_return: 'approved',
-            binary_mode: true
-          })
-        });
+  try {
+    var response = await fetch('/.netlify/functions/create-preference', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        origin: window.location.origin, // ADICIONADO: Necessário para o backend
+        items: cart.map(function(item) {
+          return {
+            title: item.name,
+            quantity: item.qty,
+            unit_price: item.price,
+            currency_id: 'BRL'
+          };
+        }),
+        payer: { name: nome, email: email, phone: { number: telefone } },
+        external_reference: pedidoId
+      })
+    });
 
-        var data = await response.json();
+    var data = await response.json();
+    if (!data.preferenceId) throw new Error('Falha ao gerar ID de pagamento');
 
-        if (!data.preferenceId) {
-          throw new Error('Resposta inválida da API: ' + JSON.stringify(data));
-        }
+    // Abre o Checkout Pro (Redirecionamento) - Mais estável para iniciantes
+    window.location.href = data.init_point; 
 
-        // Limpar container do brick
-        if (brickController) {
-          await brickController.unmount();
-          brickController = null;
-        }
-        var brickContainer = document.getElementById('walletBrick_container');
-        brickContainer.innerHTML = '';
-        checkoutBtn.style.display = 'none';
-
-        // Garantir que a sidebar está aberta
-        openCart();
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        // Renderizar o Wallet Brick
-        brickController = await mp.bricks().create('wallet', 'walletBrick_container', {
-          initialization: {
-            preferenceId: data.preferenceId,
-            redirectMode: 'modal'
-          }
-        });
-
-        checkoutBtn.textContent = 'Aguardando pagamento...';
-        checkoutBtn.disabled = false;
-
-      } catch (error) {
-        console.error('Erro:', error);
-        if (brickController) {
-          await brickController.unmount();
-          brickController = null;
-        }
-        var brickContainer = document.getElementById('walletBrick_container');
-        brickContainer.innerHTML = '';
-        checkoutBtn.style.display = '';
-        checkoutBtn.textContent = 'Pagar com Mercado Pago';
-        checkoutBtn.disabled = false;
-        alert('Erro ao iniciar pagamento: ' + error.message + '\n\nVocê será direcionado para o WhatsApp.');
-        abrirWhatsAppCheckout();
+  } catch (error) {
+    console.error('Erro:', error);
+    alert('Erro ao iniciar pagamento. Finalize via WhatsApp.');
+    abrirWhatsAppCheckout();
+  }
+}
       }
     }
 
