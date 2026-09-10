@@ -4,604 +4,705 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Skincare Pro Store — Produtos Estéticos Originais para Profissionais</title>
-  <meta name="description" content="Dysport, Sculptra, LineBody, Nabota, Momm, Botox Allergan e mais produtos estéticos originais num único carrinho. Entrega expressa em 2-3 dias úteis. Preço de fábrica. Nota fiscal.">
+  <meta name="description" content="Dysport, Sculptra, LineBody, Nabota, Momm, Botox Allergan e mais produtos estéticos originais num único carrinho. Entrega expressa em 2-3 dias úteis. Preço de fábrica com nota fiscal.">
+  
+  <!-- SDK do Mercado Pago v2 -->
   <script src="https://sdk.mercadopago.com/js/v2"></script>
+  
   <style>
     :root {
-      --primary: #e11d48;
-      --primary-dark: #be123c;
-      --primary-light: #f43f5e;
-      --accent: #fb7185;
-      --dark: #0f0f14;
-      --dark-light: #1a1a24;
-      --light: #fafafa;
-      --gray: #6b7280;
-      --gray-light: #e5e7eb;
-      --white: #ffffff;
-      --green: #10b981;
-      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
-      --radius: 12px;
+      --primary: #e11d48;<br/>
+      --primary-dark: #be123c;<br/>
+      --primary-light: #f43f5e;<br/>
+      --accent: #fb7185;<br/>
+      --dark: #0f0f14;<br/>
+      --dark-light: #1a1a24;<br/>
+      --light: #fafafa;<br/>
+      --gray: #6b7280;<br/>
+      --gray-light: #e5e7eb;<br/>
+      --white: #ffffff;<br/>
+      --green: #10b981;<br/>
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);<br/>
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);<br/>
+      --radius: 12px;<br/>
       --transition: all 0.3s ease;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; color: var(--dark); background: var(--light); line-height: 1.6; }
-    a { text-decoration: none; color: inherit; }
-    img { max-width: 100%; display: block; }
-    button { cursor: pointer; border: none; font-family: inherit; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }<br/>
+    html { scroll-behavior: smooth; }<br/>
+    body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: var(--dark); background: var(--light); line-height: 1.6; }<br/>
+    a { text-decoration: none; color: inherit; }<br/>
+    img { max-width: 100%; display: block; }<br/>
+    button { cursor: pointer; border: none; font-family: inherit; }<br/>
     input { font-family: inherit; }
-    .scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--primary-light)); width: 0%; z-index: 9999; transition: width 0.1s; }
-    .floating-cart { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; z-index: 1000; box-shadow: var(--shadow-lg); transition: var(--transition); }
-    .floating-cart:hover { transform: scale(1.1); background: var(--primary-dark); }
-    .floating-cart__badge { position: absolute; top: -4px; right: -4px; background: var(--dark); color: white; font-size: 12px; font-weight: bold; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
-    .whatsapp-float { position: fixed; bottom: 24px; left: 24px; width: 56px; height: 56px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; z-index: 1000; box-shadow: var(--shadow-lg); transition: var(--transition); }
+    
+    .scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--primary-light)); width: 0%; z-index: 9999; transition: width 0.1s; }<br/>
+    .floating-cart { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; z-index: 1000; box-shadow: var(--shadow-lg); transition: var(--transition); }<br/>
+    .floating-cart:hover { transform: scale(1.1); background: var(--primary-dark); }<br/>
+    .floating-cart__badge { position: absolute; top: -4px; right: -4px; background: var(--dark); color: white; font-size: 12px; font-weight: bold; min-width: 20px; height: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }<br/>
+    .whatsapp-float { position: fixed; bottom: 24px; left: 24px; width: 56px; height: 56px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; z-index: 1000; box-shadow: var(--shadow-lg); transition: var(--transition); }<br/>
     .whatsapp-float:hover { transform: scale(1.1); }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-    .container--narrow { max-width: 800px; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; border-radius: var(--radius); font-weight: 600; font-size: 16px; transition: var(--transition); }
-    .btn--primary { background: var(--primary); color: white; }
-    .btn--primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-    .btn--large { padding: 16px 40px; font-size: 18px; }
-    .btn--small { padding: 8px 18px; font-size: 14px; }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }<br/>
+    .container--narrow { max-width: 800px; }<br/>
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; border-radius: var(--radius); font-weight: 600; font-size: 16px; transition: var(--transition); }<br/>
+    .btn--primary { background: var(--primary); color: white; }<br/>
+    .btn--primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow-lg); }<br/>
+    .btn--secondary { background: var(--gray-light); color: var(--dark); }<br/>
+    .btn--secondary:hover { background: #d1d5db; }<br/>
+    .btn--whatsapp { background: #25d366; color: white; }<br/>
+    .btn--whatsapp:hover { background: #1ebc59; }<br/>
+    .btn--large { padding: 16px 40px; font-size: 18px; }<br/>
+    .btn--small { padding: 8px 18px; font-size: 14px; }<br/>
     .btn--block { display: flex; width: 100%; }
-    .btn--pulse { animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(225,29,72,0.4); } 50% { box-shadow: 0 0 0 12px rgba(225,29,72,0); } }
-    .section { padding: 80px 0; }
-    .section--dark { background: var(--dark); color: white; }
-    .section__title { font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 12px; line-height: 1.2; }
-    .section__subtitle { font-size: 18px; text-align: center; color: var(--gray); margin-bottom: 40px; }
-    .section__title--light { color: white; }
+    
+    .section { padding: 80px 0; }<br/>
+    .section--dark { background: var(--dark); color: white; }<br/>
+    .section__title { font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 12px; line-height: 1.2; }<br/>
+    .section__subtitle { font-size: 18px; text-align: center; color: var(--gray); margin-bottom: 40px; }<br/>
+    .section__title--light { color: white; }<br/>
     .text-rose { color: var(--primary-light); }
-    .hero { position: relative; min-height: 90vh; display: flex; align-items: center; background: linear-gradient(135deg, #fff5f7 0%, #fafafa 50%, #f0f9ff 100%); overflow: hidden; }
-    .hero__background { position: absolute; inset: 0; }
-    .hero__gradient { position: absolute; top: -200px; right: -200px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(225,29,72,0.08), transparent 70%); border-radius: 50%; }
-    .hero__content { position: relative; z-index: 2; padding: 60px 20px; }
-    .hero__badges { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
-    .badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 500; }
-    .badge--success { background: rgba(16,185,129,0.1); color: var(--green); }
-    .badge__dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: blink 2s infinite; }
-    @keyframes blink { 50% { opacity: 0.5; } }
-    .badge--outline { border: 1px solid var(--gray-light); color: var(--gray); }
-    .hero__title { font-size: 48px; font-weight: 800; line-height: 1.15; margin-bottom: 20px; max-width: 900px; }
-    .hero__subtitle { font-size: 18px; color: var(--gray); max-width: 700px; margin-bottom: 32px; }
-    .hero__trust { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 24px; }
+    
+    .hero { position: relative; min-height: 85vh; display: flex; align-items: center; background: linear-gradient(135deg, #fff5f7 0%, #fafafa 50%, #f0f9ff 100%); overflow: hidden; }<br/>
+    .hero__background { position: absolute; inset: 0; }<br/>
+    .hero__gradient { position: absolute; top: -200px; right: -200px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(225,29,72,0.08), transparent 70%); border-radius: 50%; }<br/>
+    .hero__content { position: relative; z-index: 2; padding: 60px 20px; }<br/>
+    .hero__badges { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }<br/>
+    .badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 500; }<br/>
+    .badge--success { background: rgba(16,185,129,0.1); color: var(--green); }<br/>
+    .badge__dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; }<br/>
+    .badge--outline { border: 1px solid var(--gray-light); color: var(--gray); background: white; }<br/>
+    .hero__title { font-size: 46px; font-weight: 800; line-height: 1.2; margin-bottom: 20px; max-width: 900px; }<br/>
+    .hero__subtitle { font-size: 18px; color: var(--gray); max-width: 700px; margin-bottom: 32px; }<br/>
+    .hero__trust { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 24px; }<br/>
     .hero__trust-item { font-size: 15px; font-weight: 500; }
-    .problem__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
-    .problem__card { background: white; padding: 32px; border-radius: var(--radius); box-shadow: var(--shadow); transition: var(--transition); }
-    .problem__card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-    .problem__icon { color: var(--primary); margin-bottom: 16px; }
-    .problem__card-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    
+    .problem__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }<br/>
+    .problem__card { background: white; padding: 32px; border-radius: var(--radius); box-shadow: var(--shadow); transition: var(--transition); }<br/>
+    .problem__card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }<br/>
+    .problem__icon { font-size: 32px; margin-bottom: 16px; }<br/>
+    .problem__card-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; }<br/>
     .problem__card-text { font-size: 15px; color: var(--gray); }
-    code { background: var(--gray-light); padding: 2px 8px; border-radius: 4px; font-size: 14px; }
-    .solution__pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .pillar { text-align: center; padding: 24px; }
-    .pillar__icon { font-size: 40px; margin-bottom: 12px; }
-    .pillar__title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    
+    .solution__pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }<br/>
+    .pillar { text-align: center; padding: 24px; }<br/>
+    .pillar__icon { font-size: 40px; margin-bottom: 12px; }<br/>
+    .pillar__title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }<br/>
     .pillar__text { color: rgba(255,255,255,0.7); font-size: 15px; }
-    .catalog__filters { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
-    .filter-btn { padding: 8px 20px; border-radius: 20px; font-weight: 600; font-size: 14px; background: white; border: 2px solid var(--gray-light); color: var(--gray); transition: var(--transition); }
-    .filter-btn--active, .filter-btn:hover { background: var(--primary); border-color: var(--primary); color: white; }
-    .catalog__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .product-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); }
-    .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-    .product-card__image { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: white; position: relative; }
-    .product-card__badge { position: absolute; top: 12px; right: 12px; background: var(--green); color: white; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 12px; }
-    .product-card__content { padding: 20px; }
-    .product-card__title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-    .product-card__desc { font-size: 14px; color: var(--gray); margin-bottom: 16px; }
-    .product-card__footer { display: flex; justify-content: space-between; align-items: center; }
+    
+    .catalog__filters { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }<br/>
+    .filter-btn { padding: 8px 20px; border-radius: 20px; font-weight: 600; font-size: 14px; background: white; border: 2px solid var(--gray-light); color: var(--gray); transition: var(--transition); }<br/>
+    .filter-btn--active, .filter-btn:hover { background: var(--primary); border-color: var(--primary); color: white; }<br/>
+    .catalog__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }<br/>
+    .product-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); }<br/>
+    .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }<br/>
+    .product-card__image { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: white; position: relative; }<br/>
+    .product-card__badge { position: absolute; top: 12px; right: 12px; background: var(--green); color: white; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 12px; }<br/>
+    .product-card__content { padding: 20px; }<br/>
+    .product-card__title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }<br/>
+    .product-card__desc { font-size: 14px; color: var(--gray); margin-bottom: 16px; min-height: 42px; }<br/>
+    .product-card__footer { display: flex; justify-content: space-between; align-items: center; }<br/>
     .product-card__price { font-size: 16px; font-weight: 700; color: var(--primary); }
-    .value-stack__list { max-width: 700px; margin: 0 auto; }
-    .value-stack__item { display: flex; align-items: center; gap: 16px; padding: 20px 0; }
-    .value-stack__check { width: 36px; height: 36px; background: rgba(16,185,129,0.1); color: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .value-stack__item-title { font-weight: 700; font-size: 17px; }
-    .value-stack__item-desc { font-size: 14px; color: var(--gray); }
-    .value-stack__price { font-weight: 700; font-size: 16px; }
-    .value-stack__price--free { color: var(--green); }
-    .value-stack__divider { height: 1px; background: var(--gray-light); }
-    .value-stack__total { text-align: center; margin-top: 32px; padding: 24px; background: white; border-radius: var(--radius); box-shadow: var(--shadow); }
+    
+    .value-stack__list { max-width: 700px; margin: 0 auto; }<br/>
+    .value-stack__item { display: flex; align-items: center; gap: 16px; padding: 18px 0; }<br/>
+    .value-stack__check { width: 36px; height: 36px; background: rgba(16,185,129,0.1); color: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: bold; }<br/>
+    .value-stack__item-title { font-weight: 700; font-size: 17px; }<br/>
+    .value-stack__item-desc { font-size: 14px; color: var(--gray); }<br/>
+    .value-stack__price { font-weight: 700; font-size: 16px; }<br/>
+    .value-stack__price--free { color: var(--green); }<br/>
+    .value-stack__divider { height: 1px; background: var(--gray-light); }<br/>
+    .value-stack__total { text-align: center; margin-top: 32px; padding: 24px; background: white; border-radius: var(--radius); box-shadow: var(--shadow); }<br/>
     .value-stack__total-value { font-size: 24px; font-weight: 800; color: var(--primary); }
-    .social-proof__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .testimonial { background: white; padding: 28px; border-radius: var(--radius); box-shadow: var(--shadow); }
-    .testimonial__quote-mark { font-size: 48px; color: var(--gray-light); line-height: 1; margin-bottom: 8px; }
-    .testimonial__text { font-size: 15px; color: var(--dark); margin-bottom: 20px; font-style: italic; }
-    .testimonial__author { display: flex; align-items: center; gap: 12px; }
-    .testimonial__avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; }
-    .testimonial__name { font-weight: 600; font-size: 15px; }
+    
+    .social-proof__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }<br/>
+    .testimonial { background: white; padding: 28px; border-radius: var(--radius); box-shadow: var(--shadow); color: var(--dark); }<br/>
+    .testimonial__quote-mark { font-size: 40px; color: var(--primary-light); line-height: 1; margin-bottom: 8px; font-family: serif; }<br/>
+    .testimonial__text { font-size: 15px; color: var(--dark); margin-bottom: 20px; font-style: italic; }<br/>
+    .testimonial__author { display: flex; align-items: center; gap: 12px; }<br/>
+    .testimonial__avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; }<br/>
+    .testimonial__name { font-weight: 600; font-size: 15px; }<br/>
     .testimonial__role { font-size: 13px; color: var(--gray); }
-    .guarantee__items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .guarantee__item { text-align: center; }
-    .guarantee__icon { font-size: 40px; margin-bottom: 12px; }
-    .guarantee__item-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    
+    .guarantee__items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }<br/>
+    .guarantee__item { text-align: center; }<br/>
+    .guarantee__icon { font-size: 40px; margin-bottom: 12px; }<br/>
+    .guarantee__item-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }<br/>
     .guarantee__item-text { color: rgba(255,255,255,0.7); font-size: 15px; }
-    .urgency__content { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-    .urgency__counter-number { font-size: 64px; font-weight: 800; color: var(--primary); text-align: center; }
-    .urgency__counter-bar { height: 12px; background: var(--gray-light); border-radius: 6px; margin-top: 12px; overflow: hidden; }
-    .urgency__counter-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: 6px; }
-    .faq__list { max-width: 700px; margin: 0 auto; }
-    .faq__item { background: white; border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; box-shadow: var(--shadow); }
-    .faq__question { padding: 20px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; list-style: none; }
-    .faq__question::-webkit-details-marker { display: none; }
-    .faq__question span { transition: transform 0.3s ease; font-size: 24px; color: var(--primary); font-weight: 300; }
-    details[open] .faq__question span { transform: rotate(45deg); }
-    .faq__answer { padding: 0 20px 20px; color: var(--gray); font-size: 15px; }
-    .footer { background: var(--dark); color: rgba(255,255,255,0.7); padding: 60px 0 24px; }
-    .footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; }
-    .footer__logo { font-size: 22px; font-weight: 800; color: white; margin-bottom: 12px; }
-    .footer__bottom { text-align: center; padding-top: 32px; margin-top: 32px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 14px; }
-    .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1001; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-    .cart-overlay--active { opacity: 1; pointer-events: auto; }
-    .cart-sidebar { position: fixed; top: 0; right: -480px; width: 100%; max-width: 440px; height: 100vh; background: white; z-index: 1002; transition: right 0.3s ease; display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,0.15); }
-    .cart-sidebar--open { right: 0; }
-    .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--gray-light); }
-    .cart-close { background: none; font-size: 28px; color: var(--gray); }
-    .cart-items { flex: 1; overflow-y: auto; padding: 20px; }
-    .cart-empty { text-align: center; color: var(--gray); padding: 40px; }
-    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--gray-light); }
-    .cart-item__name { font-weight: 600; font-size: 15px; }
-    .cart-item__price { font-size: 14px; color: var(--gray); }
-    .cart-item__controls { display: flex; align-items: center; gap: 8px; }
-    .qty-btn { width: 28px; height: 28px; border-radius: 6px; background: var(--gray-light); border: none; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-    .qty-btn:hover { background: var(--primary); color: white; }
-    .qty-value { font-weight: 600; min-width: 24px; text-align: center; }
-    .cart-footer { padding: 20px; border-top: 1px solid var(--gray-light); }
-    .cart-customer-fields { margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; }
-    .cart-customer-fields input { width: 100%; padding: 12px 14px; border: 2px solid var(--gray-light); border-radius: 8px; font-size: 15px; transition: var(--transition); }
-    .cart-customer-fields input:focus { outline: none; border-color: var(--primary); }
-    .cart-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 18px; font-weight: 700; }
-    .cart-total-value { color: var(--primary); font-size: 22px; }
-    .wallet-brick-container { margin-top: 16px; min-height: 50px; }
-    @media (max-width: 1024px) {
-      .problem__grid, .solution__pillars, .guarantee__items, .social-proof__grid, .catalog__grid { grid-template-columns: repeat(2, 1fr); }
-      .urgency__content { grid-template-columns: 1fr; }
+    
+    .urgency__content { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }<br/>
+    .urgency__counter-number { font-size: 56px; font-weight: 800; color: var(--primary); text-align: center; }<br/>
+    .urgency__counter-bar { height: 12px; background: var(--gray-light); border-radius: 6px; margin-top: 12px; overflow: hidden; }<br/>
+    .urgency__counter-bar-fill { height: 100%; width: 75%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: 6px; }
+    
+    .faq__list { max-width: 750px; margin: 0 auto; }<br/>
+    .faq__item { background: white; border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; box-shadow: var(--shadow); }<br/>
+    .faq__question { padding: 20px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; list-style: none; }<br/>
+    .faq__question::-webkit-details-marker { display: none; }<br/>
+    .faq__question span { transition: transform 0.3s ease; font-size: 20px; color: var(--primary); font-weight: bold; }<br/>
+    details[open] .faq__question span { transform: rotate(45deg); }<br/>
+    .faq__answer { padding: 0 20px 20px; color: var(--gray); font-size: 15px; border-top: 1px solid var(--gray-light); padding-top: 12px; }
+    
+    .cta-final { background: linear-gradient(135deg, var(--dark) 0%, var(--dark-light) 100%); color: white; text-align: center; padding: 80px 0; }<br/>
+    .cta-final__title { font-size: 36px; font-weight: 800; margin-bottom: 16px; }<br/>
+    .cta-final__subtitle { font-size: 18px; color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto 32px; }
+    
+    .footer { background: #08080b; color: rgba(255,255,255,0.7); padding: 60px 0 24px; font-size: 14px; }<br/>
+    .footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; }<br/>
+    .footer__logo { font-size: 22px; font-weight: 800; color: white; margin-bottom: 12px; }<br/>
+    .footer__heading { color: white; font-size: 16px; font-weight: 700; margin-bottom: 16px; }<br/>
+    .footer__list { list-style: none; display: flex; flex-direction: column; gap: 8px; }<br/>
+    .footer__bottom { text-align: center; padding-top: 32px; margin-top: 32px; border-top: 1px solid rgba(255,255,255,0.1); }
+    
+    .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1001; opacity: 0; pointer-events: none; transition: opacity 0.3s; }<br/>
+    .cart-overlay--active { opacity: 1; pointer-events: auto; }<br/>
+    .cart-sidebar { position: fixed; top: 0; right: -480px; width: 100%; max-width: 440px; height: 100vh; background: white; z-index: 1002; transition: right 0.3s ease; display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,0.15); }<br/>
+    .cart-sidebar--open { right: 0; }<br/>
+    .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--gray-light); }<br/>
+    .cart-close { background: none; font-size: 28px; color: var(--gray); }<br/>
+    .cart-items { flex: 1; overflow-y: auto; padding: 20px; }<br/>
+    .cart-empty { text-align: center; color: var(--gray); padding: 40px 0; }<br/>
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--gray-light); }<br/>
+    .cart-item__name { font-weight: 600; font-size: 15px; }<br/>
+    .cart-item__price { font-size: 14px; color: var(--gray); }<br/>
+    .cart-item__controls { display: flex; align-items: center; gap: 8px; margin-top: 4px; }<br/>
+    .qty-btn { width: 28px; height: 28px; border-radius: 6px; background: var(--gray-light); border: none; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; }<br/>
+    .qty-btn:hover { background: var(--primary); color: white; }<br/>
+    .qty-value { font-weight: 600; min-width: 24px; text-align: center; }<br/>
+    .cart-footer { padding: 20px; border-top: 1px solid var(--gray-light); background: #fafafa; }<br/>
+    .cart-customer-fields { margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; }<br/>
+    .cart-customer-fields input { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; }<br/>
+    .cart-customer-fields input:focus { outline: none; border-color: var(--primary); }<br/>
+    .cart-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 18px; font-weight: 700; }<br/>
+    .cart-total-value { color: var(--primary); font-size: 22px; }<br/>
+    .wallet-brick-container { margin-top: 12px; min-height: 48px; }<br/>
+    .status-alert { margin: 20px 0; padding: 16px; border-radius: 8px; font-weight: 600; text-align: center; }<br/>
+    .status-alert--success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }<br/>
+    .status-alert--pending { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }<br/>
+    .status-alert--failure { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    
+    @media (max-width: 1024px) {<br/>
+      .problem__grid, .solution__pillars, .guarantee__items, .social-proof__grid, .catalog__grid { grid-template-columns: repeat(2, 1fr); }<br/>
+      .urgency__content { grid-template-columns: 1fr; }<br/>
       .footer__grid { grid-template-columns: 1fr 1fr; }
     }
-    @media (max-width: 768px) {
-      .section { padding: 48px 0; }
-      .section__title { font-size: 26px; }
-      .hero__title { font-size: 30px; }
-      .problem__grid, .solution__pillars, .guarantee__items, .social-proof__grid, .catalog__grid, .footer__grid { grid-template-columns: 1fr; }
-      .urgency__counter-number { font-size: 48px; }
-      .floating-cart, .whatsapp-float { width: 48px; height: 48px; bottom: 16px; }
-      .floating-cart { right: 16px; }
+    @media (max-width: 768px) {<br/>
+      .section { padding: 50px 0; }<br/>
+      .section__title { font-size: 28px; }<br/>
+      .hero__title { font-size: 32px; }<br/>
+      .problem__grid, .solution__pillars, .guarantee__items, .social-proof__grid, .catalog__grid, .footer__grid { grid-template-columns: 1fr; }<br/>
+      .urgency__counter-number { font-size: 44px; }<br/>
+      .floating-cart, .whatsapp-float { width: 48px; height: 48px; bottom: 16px; }<br/>
+      .floating-cart { right: 16px; }<br/>
       .whatsapp-float { left: 16px; }
     }
-    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }<br/>
     .fade-in--visible { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
+
+  <!-- Barra de Progresso de Scroll -->
   <div class="scroll-progress" id="scrollProgress"></div>
-  <button class="floating-cart" id="floatingCart" aria-label="Carrinho de compras">
+
+  <!-- Botão Flutuante do Carrinho -->
+  <button class="floating-cart" id="floatingCart" aria-label="Abrir Carrinho">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
     <span class="floating-cart__badge" id="cartCount">0</span>
   </button>
-  <a href="https://wa.me/5531984815086?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+
+  <!-- Botão Flutuante do WhatsApp -->
+  <a href="https://wa.me/5531984815086?text=Ol%C3%A1!%20Gostaria%20de%20tirar%20d%C3%BAvidas%20sobre%20os%20produtos%20est%C3%A9ticos." class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Atendimento via WhatsApp">
     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.255-.463-1.449-.572-.194-.108-.337-.149-.479.149-.143.297-.555.572-.679.679-.124.108-.269.149-.466.049-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.148-.347-1.475-.497-2.02-.149-.546-.298-.546-.446-.546h-.466c-.198 0-.52.074-.793.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.485.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
   </a>
+
+  <!-- Banner de Retorno de Status do Pedido -->
+  <div id="statusBannerContainer" class="container"></div>
+
+  <!-- ====== 1. HERO SECTION ====== -->
   <header class="hero" id="hero">
     <div class="hero__background"><div class="hero__gradient"></div></div>
     <div class="container hero__content">
       <div class="hero__badges">
-        <span class="badge badge--success"><span class="badge__dot"></span>7 produtos originais em estoque</span>
-        <span class="badge badge--outline">Entrega expressa para todo Brasil</span>
+        <span class="badge badge--success"><span class="badge__dot"></span> 7 produtos originais em estoque</span>
+        <span class="badge badge--outline">Entrega expressa para todo o Brasil</span>
         <span class="badge badge--outline">Nota fiscal em todos os pedidos</span>
       </div>
-      <h1 class="hero__title">Os produtos estéticos que sua clínica precisa — <span class="text-rose">originais, em estoque e na sua porta em até 3 dias úteis</span></h1>
-      <p class="hero__subtitle">Dysport, Sculptra, LineBody, Nabota, Momm, Botox Allergan e mais <strong>produtos das melhores marcas</strong> num único carrinho. Sem intermediários inflando o preço. Você pede hoje, atende amanhã.</p>
-      <a href="#catalog" class="btn btn--primary btn--large">Acessar catálogo completo agora</a>
+      <h1 class="hero__title">Os produtos estéticos que sua clínica precisa — <span class="text-rose">originais, em estoque e na sua porta em até 3 dias úteis.</span></h1>
+      <p class="hero__subtitle">Dysport, Sculptra, LineBody, Nabota, Momm e Botox Allergan num único carrinho. Sem intermediários superfaturando seu pedido. Peça hoje e atenda com segurança.</p>
+      <a href="#catalog" class="btn btn--primary btn--large">Acessar Catálogo Completo</a>
       <div class="hero__trust">
-        <span class="hero__trust-item">✅ Originais</span>
-        <span class="hero__trust-item">✅ Nota fiscal</span>
-        <span class="hero__trust-item">✅ Frete rápido</span>
+        <span class="hero__trust-item">✅ 100% Originais</span>
+        <span class="hero__trust-item">✅ Rastreabilidade e NF</span>
+        <span class="hero__trust-item">✅ Frete Rápido Assegurado</span>
       </div>
     </div>
   </header>
+
+  <!-- ====== 2. PROBLEM SECTION ====== -->
   <section class="section" id="problem">
     <div class="container">
-      <h2 class="section__title">Se você é profissional de estética, você já viveu isso:</h2>
+      <h2 class="section__title">Se você é profissional de estética, já enfrentou estes gargalos:</h2>
+      <p class="section__subtitle">A cadeia tradicional de suprimentos estéticos prejudica a sua rotina clínica.</p>
       <div class="problem__grid">
         <article class="problem__card fade-in">
           <div class="problem__icon">⚠️</div>
-          <h3 class="problem__card-title">O distribuidor sumiu. E o produto também.</h3>
-          <p class="problem__card-text">Você tem paciente na quarta, liga segunda para pedir o produto e... "vamos verificar a previsão de entrega." Quinta chega e nada. Seu paciente desmarca. Você perde o procedimento. <strong>Perde a confiança. Perde o paciente.</strong></p>
+          <h3 class="problem__card-title">Distribuidor sem estoque e atraso crônico</h3>
+          <p class="problem__card-text">Você agenda o paciente para quarta, compra na segunda e o produto não chega. O paciente cancela, a agenda esvazia e você perde faturamento e credibilidade técnica.</p>
         </article>
         <article class="problem__card fade-in">
           <div class="problem__icon">💸</div>
-          <h3 class="problem__card-title">O preço que deveria ser seu está no bolso de 3 intermediários.</h3>
-          <p class="problem__card-text">Cada elo na cadeia de distribuição embute 15%, 20%, às vezes 30% de markup. No final, você paga <code>R$ 1.600</code> num produto que custava <code>R$ 900</code> no laboratório. <strong>Sua margem por procedimento vai desaparecendo.</strong></p>
+          <h3 class="problem__card-title">Intermediários corroendo suas margens</h3>
+          <p class="problem__card-text">Cada elo na cadeia de distribuição tradicional adiciona margens abusivas de lucro. No final, o produto chega com custo inflacionado, reduzindo o seu retorno por aplicação.</p>
         </article>
         <article class="problem__card fade-in">
-          <div class="problem__icon">🖥️</div>
-          <h3 class="problem__card-title">Sete abas abertas. Sete fornecedores. Zero paciência.</h3>
-          <p class="problem__card-text">Dysport você compra de um. LineBody de outro. Sculptra de um terceiro. Três logins, três pedidos, três notas fiscais. <strong>Tempo que deveria ser gasto atendendo pacientes vai pra gestão de pedidos.</strong></p>
+          <div class="problem__icon">📋</div>
+          <h3 class="problem__card-title">Múltiplos cadastros e compras fragmentadas</h3>
+          <p class="problem__card-text">Toxinas de um representante, bioestimuladores de outro e preenchedores de um terceiro. Horas perdidas gerenciando vários pedidos em vez de focar no atendimento ao paciente.</p>
         </article>
       </div>
     </div>
   </section>
+
+  <!-- ====== 3. SOLUTION SECTION ====== -->
   <section class="section section--dark" id="solution">
     <div class="container">
-      <h2 class="section__title section__title--light">A solução é simples: um e-commerce. Todos os produtos. Preço real. Entrega rápida.</h2>
+      <h2 class="section__title section__title--light">Um ecossistema unificado para sua clínica</h2>
+      <p class="section__subtitle" style="color: rgba(255,255,255,0.7);">Catálogo consolidado, procedência direta e logística eficiente num único fluxo de compra.</p>
       <div class="solution__pillars">
-        <div class="pillar"><div class="pillar__icon">🏭</div><h3 class="pillar__title">Catálogo Completo</h3><p class="pillar__text">7 produtos das melhores marcas num único carrinho.</p></div>
-        <div class="pillar"><div class="pillar__icon">🚚</div><h3 class="pillar__title">Entrega Expressa</h3><p class="pillar__text">Média de 2 a 3 dias úteis para todo Brasil.</p></div>
-        <div class="pillar"><div class="pillar__icon">💰</div><h3 class="pillar__title">Preço de Fábrica</h3><p class="pillar__text">Sem intermediários embutindo markup. Sua margem volta a ser sua.</p></div>
+        <div class="pillar fade-in">
+          <div class="pillar__icon">📦</div>
+          <h3 class="pillar__title">Catálogo Completo</h3>
+          <p class="pillar__text">As principais marcas do mercado global reunidas em um único pedido centralizado.</p>
+        </div>
+        <div class="pillar fade-in">
+          <div class="pillar__icon">⚡</div>
+          <h3 class="pillar__title">Logística Expressa</h3>
+          <p class="pillar__text">Prazos médios de 2 a 3 dias úteis para todo o território nacional, com monitoramento térmico.</p>
+        </div>
+        <div class="pillar fade-in">
+          <div class="pillar__icon">🛡️</div>
+          <h3 class="pillar__title">Preço Direto e Seguro</h3>
+          <p class="pillar__text">Sem intermediários desnecessários. Sua clínica mantém margens sólidas e competitivas.</p>
+        </div>
       </div>
     </div>
   </section>
+
+  <!-- ====== 4. VALUE STACK ====== -->
   <section class="section" id="value-stack">
     <div class="container container--narrow">
-      <h2 class="section__title">O que você recebe ao comprar da Skincare Pro Store</h2>
-      <p class="section__subtitle">Mais do que produtos — uma estrutura completa para sua clínica não parar.</p>
+      <h2 class="section__title">Vantagens integradas ao seu pedido</h2>
+      <p class="section__subtitle">Muito além de insumos: garantia técnica, velocidade e suporte dedicado.</p>
       <div class="value-stack__list">
         <div class="value-stack__item">
           <div class="value-stack__check">✓</div>
           <div style="flex:1">
-            <h3 class="value-stack__item-title">Produto original de fábrica</h3>
-            <p class="value-stack__item-desc">Dysport, Sculptra, LineBody, Nabota, Momm ou Botox Allergan — direto dos laboratórios.</p>
+            <h3 class="value-stack__item-title">Lotes Originais de Laboratório</h3>
+            <p class="value-stack__item-desc">Procedência farmacêutica controlada com certificação de lote.</p>
           </div>
-          <span class="value-stack__price">R$ 1.600</span>
+          <span class="value-stack__price">R$ 1.600,00</span>
         </div>
         <div class="value-stack__divider"></div>
         <div class="value-stack__item">
           <div class="value-stack__check">✓</div>
           <div style="flex:1">
-            <h3 class="value-stack__item-title">Frete expressa para todo Brasil</h3>
-            <p class="value-stack__item-desc">Entrega em 2 a 3 dias úteis. Seu paciente não desmarca por falta de produto.</p>
+            <h3 class="value-stack__item-title">Frete Expresso Assegurado</h3>
+            <p class="value-stack__item-desc">Entrega rápida em 2 a 3 dias úteis para não travar sua agenda clínica.</p>
           </div>
-          <span class="value-stack__price value-stack__price--free">Grátis</span>
+          <span class="value-stack__price value-stack__price--free">Incluso</span>
         </div>
         <div class="value-stack__divider"></div>
         <div class="value-stack__item">
           <div class="value-stack__check">✓</div>
           <div style="flex:1">
-            <h3 class="value-stack__item-title">Nota fiscal em todos os pedidos</h3>
-            <p class="value-stack__item-desc">Procedência garantida e documentação completa para sua clínica.</p>
+            <h3 class="value-stack__item-title">Nota Fiscal Eletrônica Integral</h3>
+            <p class="value-stack__item-desc">Conformidade contábil e fiscal completa para sua empresa.</p>
           </div>
-          <span class="value-stack__price value-stack__price--free">Grátis</span>
+          <span class="value-stack__price value-stack__price--free">Incluso</span>
         </div>
         <div class="value-stack__divider"></div>
         <div class="value-stack__item">
           <div class="value-stack__check">✓</div>
           <div style="flex:1">
-            <h3 class="value-stack__item-title">Atendimento direto via WhatsApp</h3>
-            <p class="value-stack__item-desc">Fale direto com quem entende. Sem robô, sem fila de espera, sem "aguarde nosso retorno".</p>
+            <h3 class="value-stack__item-title">Suporte Profissional Direto</h3>
+            <p class="value-stack__item-desc">Canal direto via WhatsApp com especialistas para apoio em pedidos.</p>
           </div>
-          <span class="value-stack__price value-stack__price--free">Grátis</span>
+          <span class="value-stack__price value-stack__price--free">Incluso</span>
         </div>
         <div class="value-stack__divider"></div>
         <div class="value-stack__item">
           <div class="value-stack__check">✓</div>
           <div style="flex:1">
-            <h3 class="value-stack__item-title">Garantia de troca ou reembolso em 7 dias</h3>
-            <p class="value-stack__item-desc">Produto chegou com problema? Troca garantida ou seu dinheiro de volta. Sem burocracia.</p>
+            <h3 class="value-stack__item-title">Garantia de Troca em 7 Dias</h3>
+            <p class="value-stack__item-desc">Proteção total contra qualquer avaria logística ou violação de embalagem.</p>
           </div>
-          <span class="value-stack__price value-stack__price--free">Grátis</span>
+          <span class="value-stack__price value-stack__price--free">Incluso</span>
         </div>
         <div class="value-stack__total">
-          <p>Valor total do pacote: <span style="text-decoration:line-through;color:var(--gray);">R$ 2.730</span></p>
-          <p style="margin-top:8px;">Você paga a partir de: <span class="value-stack__total-value">R$ 1.600</span></p>
+          <p>Valor de mercado estimado: <span style="text-decoration: line-through; color: var(--gray);">R$ 2.450,00</span></p>
+          <p style="margin-top: 8px;">Preço base por unidade: <span class="value-stack__total-value">R$ 1.600,00</span></p>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- ====== 5. CATALOG SECTION (7 PRODUTOS) ====== -->
   <section class="section" id="catalog">
     <div class="container">
-      <h2 class="section__title">Catálogo Completo — 7 Produtos Originais</h2>
-      <p class="section__subtitle">Todos os produtos em estoque, com nota fiscal e entrega expressa.</p>
+      <h2 class="section__title">Catálogo Oficial de Produtos</h2>
+      <p class="section__subtitle">Selecione os insumos para a sua clínica e abasteça seu estoque.</p>
+      
       <div class="catalog__filters">
         <button type="button" class="filter-btn filter-btn--active" data-filter="all">Todos</button>
         <button type="button" class="filter-btn" data-filter="toxinas">Toxinas</button>
         <button type="button" class="filter-btn" data-filter="preenchedores">Preenchedores</button>
         <button type="button" class="filter-btn" data-filter="bioestimuladores">Bioestimuladores</button>
       </div>
+
       <div class="catalog__grid">
-        <article class="product-card" data-category="toxinas">
-          <div class="product-card__image" style="background: linear-gradient(135deg, #e11d48, #fb7185);">Dysport<span class="product-card__badge">Em estoque</span></div>
+        <!-- Produto 1 -->
+        <article class="product-card fade-in" data-category="toxinas">
+          <div class="product-card__image" style="background: linear-gradient(135deg, #e11d48, #fb7185);">
+            Dysport
+            <span class="product-card__badge">Em Estoque</span>
+          </div>
           <div class="product-card__content">
             <h3 class="product-card__title">Dysport</h3>
-            <p class="product-card__desc">Toxina botulínica para tratamento de rugas e linhas de expressão.</p>
-            <div class="product-card__footer"><span class="product-card__price">A partir de R$ 1.600</span><button type="button" class="btn btn--primary btn--small" onclick="addToCart('Dysport', 1600)">Adicionar</button></div>
+            <p class="product-card__desc">Toxina botulínica tipo A de alta performance para tratamentos estéticos e funcionais.</p>
+            <div class="product-card__footer">
+              <span class="product-card__price">R$ 1.600,00</span>
+              <button type="button" class="btn btn--primary btn--small" onclick="addToCart('Dysport')">Adicionar</button>
+            </div>
           </div>
         </article>
-        <article class="product-card" data-category="bioestimuladores">
-          <div class="product-card__image" style="background: linear-gradient(135deg, #7c3aed, #a78bfa);">Sculptra<span class="product-card__badge">Em estoque</span></div>
+
+        <!-- Produto 2 -->
+        <article class="product-card fade-in" data-category="bioestimuladores">
+          <div class="product-card__image" style="background: linear-gradient(135deg, #7c3aed, #a78bfa);">
+            Sculptra
+            <span class="product-card__badge">Em Estoque</span>
+          </div>
           <div class="product-card__content">
             <h3 class="product-card__title">Sculptra</h3>
-            <p class="product-card__desc">Bioestimulador de colágeno para volume e rejuvenescimento facial.</p>
-            <div class="product-card__footer"><span class="product-card__price">A partir de R$ 1.600</span><button type="button" class="btn btn--primary btn--small" onclick="addToCart('Sculptra', 1600)">Adicionar</button></div>
+            <p class="product-card__desc">Bioestimulador à base de ácido poli-L-láctico para indução potente de colágeno.</p>
+            <div class="product-card__footer">
+              <span class="product-card__price">R$ 1.600,00</span>
+              <button type="button" class="btn btn--primary btn--small" onclick="addToCart('Sculptra')">Adicionar</button>
+            </div>
           </div>
         </article>
-        <article class="product-card" data-category="preenchedores">
-          <div class="product-card__image" style="background: linear-gradient(135deg, #0ea5e9, #38bdf8);">LineBody Hard<span class="product-card__badge">Em estoque</span></div>
+
+        <!-- Produto 3 -->
+        <article class="product-card fade-in" data-category="preenchedores">
+          <div class="product-card__image" style="background: linear-gradient(135deg, #0284c7, #38bdf8);">
+            LineBody Hard
+            <span class="product-card__badge">Em Estoque</span>
+          </div>
           <div class="product-card__content">
             <h3 class="product-card__title">LineBody Hard</h3>
-            <p class="product-card__desc">Preenchedor de alta densidade para remodelação corporal e facial.</p>
-            <div class="product-card__footer"><span class="product-card__price">A partir de R$ 1.600</span><button type="button" class="btn btn--primary btn--small" onclick="addToCart('LineBody Hard', 1600)">Adicionar</button></div>
+            <p class="product-card__desc">Preenchedor de alta densidade viscoelástica para volumização estrutural e corporal.</p>
+            <div class="product-card__footer">
+              <span class="product-card__price">R$ 1.600,00</span>
+              <button type="button" class="btn btn--primary btn--small" onclick="addToCart('LineBody Hard')">Adicionar</button>
+            </div>
           </div>
         </article>
-        <article class="product-card" data-category="preenchedores">
-          <div class="product-card__image" style="background: linear-gradient(135deg, #06b6d4, #22d3ee);">LineBody Soft<span class="product-card__badge">Em estoque</span></div>
+
+        <!-- Produto 4 -->
+        <article class="product-card fade-in" data-category="preenchedores">
+          <div class="product-card__image" style="background: linear-gradient(135deg, #0891b2, #22d3ee);">
+            LineBody Soft
+            <span class="product-card__badge">Em Estoque</span>
+          </div>
           <div class="product-card__content">
             <h3 class="product-card__title">LineBody Soft</h3>
-            <p class="product-card__desc">Preenchedor de baixa densidade para áreas delicadas e sutis.</p>
-            <div class="product-card__footer"><span class="product-card__price">A partir de R$ 1.600</span><button type="button" class="btn btn--primary btn--small" onclick="addToCart('LineBody Soft', 1600)">Adicionar</button></div>
+            <p class="product-card__desc">Preenchedor dérmico para correção de linhas finas, hidratação profunda e refinamentos.</p>
+            <div class="product-card__footer">
+              <span class="product-card__price">R$ 1.600,00</span>
+              <button type="button" class="btn btn--primary btn--small" onclick="addToCart('LineBody Soft')">Adicionar</button>
+            </div>
           </div>
         </article>
-        <article class="product-card" data-category="toxinas">
-          <div class="product-card__image" style="background: linear-gradient(135deg, #10b981, #34d399);">Nabota<span class="product-card__badge">Em estoque</span></div>
+
+        <!-- Produto 5 -->
+        <article class="product-card fade-in" data-category="toxinas">
+          <div class="product-card__image" style="background: linear-gradient(135deg, #059669, #34d399);">
+            Nabota
+            <span class="product-card__badge">Em Estoque</span>
+          </div>
           <div class="product-card__content">
             <h3 class="product-card__title">Nabota</h3>
-            <p class="product-card__desc">Toxina botulínica de origem coreana, alta pureza e eficácia.</p>
-            <div class="product-card__footer"><span class="product-card__price">A partir de R$ 1.600</span><button type="button" class="btn btn--primary btn--small" onclick="addToCart('Nabota', 1600)">Adicionar</button></div>
+            <p class="product-card__desc">Toxina botulínica de padrão internacional com 98,7% de pureza proteica comprovada.</p>
+            <div class="product-card__footer">
+              <span class="product-card__price">R$ 1.600,00</span>
+              <button type="button" class="btn btn--primary btn--small" onclick="addToCart('Nabota')">Adicionar</button>
+            </div>
           </div>
         </article>
-        <article class="product-card" data-category="preenchedores">
-          <div class="product-card__image" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">Momm<span class="product-card__badge">Em estoque</span></div>
+
+        <!-- Produto 6 -->
+        <article class="product-card fade-in" data-category="preenchedores">
+          <div class="product-card__image" style="background: linear-gradient(135deg, #d97706, #fbbf24);">
+            Momm
+            <span class="product-card__badge">Em Estoque</span>
+          </div>
           <div class="product-card__content">
             <h3 class="product-card__title">Momm</h3>
-            <p class="product-card__desc">Preenchedor corporal e facial com tecnologia avançada de hidratação.</p>
-            <div class="product-card__footer"><span class="product-card__price">A partir de R$ 1.600</span><button type="button" class="btn btn--primary btn--small" onclick="addToCart('Momm', 1600)">Adicionar</button></div>
+            <p class="product-card__desc">Ácido hialurônico de estabilização uniforme com excelente biocompatibilidade tecidual.</p>
+            <div class="product-card__footer">
+              <span class="product-card__price">R$ 1.600,00</span>
+              <button type="button" class="btn btn--primary btn--small" onclick="addToCart('Momm')">Adicionar</button>
+            </div>
           </div>
         </article>
-        <article class="product-card" data-category="toxinas">
-          <div class="product-card__image" style="background: linear-gradient(135deg, #6366f1, #818cf8);">Botox Allergan<span class="product-card__badge">Em estoque</span></div>
+
+        <!-- Produto 7 -->
+        <article class="product-card fade-in" data-category="toxinas">
+          <div class="product-card__image" style="background: linear-gradient(135deg, #4f46e5, #818cf8);">
+            Botox Allergan
+            <span class="product-card__badge">Em Estoque</span>
+          </div>
           <div class="product-card__content">
             <h3 class="product-card__title">Botox Allergan</h3>
-            <p class="product-card__desc">Toxina botulínica de referência mundial, qualidade Allergan.</p>
-            <div class="product-card__footer"><span class="product-card__price">A partir de R$ 1.600</span><button type="button" class="btn btn--primary btn--small" onclick="addToCart('Botox Allergan', 1600)">Adicionar</button></div>
+            <p class="product-card__desc">A referência global em toxina botulínica tipo A com máxima previsibilidade clínica.</p>
+            <div class="product-card__footer">
+              <span class="product-card__price">R$ 1.600,00</span>
+              <button type="button" class="btn btn--primary btn--small" onclick="addToCart('Botox Allergan')">Adicionar</button>
+            </div>
           </div>
         </article>
       </div>
     </div>
   </section>
+
+  <!-- ====== 6. SOCIAL PROOF ====== -->
   <section class="section section--dark" id="social-proof">
     <div class="container">
-      <h2 class="section__title section__title--light">Profissionais que já compraram conosco</h2>
-      <p class="section__subtitle" style="color:rgba(255,255,255,0.6);">Resultados reais de clínicas que receberam seus produtos em tempo recorde.</p>
+      <h2 class="section__title section__title--light">O que dizem os profissionais</h2>
+      <p class="section__subtitle" style="color: rgba(255,255,255,0.7);">Médicos e biomédicos estetas que abastecem suas clínicas regularmente.</p>
       <div class="social-proof__grid">
-        <article class="testimonial">
-          <div class="testimonial__quote-mark">"</div>
-          <p class="testimonial__text">Pedi Dysport na segunda e chegou na quarta. Meu paciente foi atendido no horário marcado. Isso nunca aconteceu com meu distribuidor anterior.</p>
+        <article class="testimonial fade-in">
+          <div class="testimonial__quote-mark">“</div>
+          <p class="testimonial__text">A agilidade na entrega do Dysport salvou minha agenda cirúrgica em Belo Horizonte. Os produtos chegaram com lacre intacto e nota fiscal pontual.</p>
           <div class="testimonial__author">
-            <div class="testimonial__avatar">DA</div>
+            <div class="testimonial__avatar">DR</div>
             <div>
-              <p class="testimonial__name">Dra. Amanda Ribeiro</p>
-              <p class="testimonial__role">Dermatologista — Belo Horizonte/MG</p>
+              <div class="testimonial__name">Dra. Renata Silveira</div>
+              <div class="testimonial__role">Dermatologista — Belo Horizonte / MG</div>
             </div>
           </div>
         </article>
-        <article class="testimonial">
-          <div class="testimonial__quote-mark">"</div>
-          <p class="testimonial__text">O preço do Sculptra aqui é metade do que eu pagava. Same produto, mesma procedência, com nota fiscal. Não faz sentido comprar de outro lugar.</p>
+        <article class="testimonial fade-in">
+          <div class="testimonial__quote-mark">“</div>
+          <p class="testimonial__text">Trabalho com Sculptra e Botox Allergan há mais de 8 anos. O preço de fábrica e a facilidade do carrinho único otimizaram 100% minhas compras.</p>
           <div class="testimonial__author">
-            <div class="testimonial__avatar">FC</div>
+            <div class="testimonial__avatar">MC</div>
             <div>
-              <p class="testimonial__name">Dr. Fernando Castro</p>
-              <p class="testimonial__role">Cirurgião Plástico — Curitiba/PR</p>
+              <div class="testimonial__name">Dr. Marcelo Castro</div>
+              <div class="testimonial__role">Cirurgião Plástico — São Paulo / SP</div>
             </div>
           </div>
         </article>
-        <article class="testimonial">
-          <div class="testimonial__quote-mark">"</div>
-          <p class="testimonial__text">Comprei LineBody Hard e Soft no mesmo pedido. Um carrinho, uma nota, entrega em 2 dias. Antes eram dois fornecedores diferentes com prazos diferentes.</p>
+        <article class="testimonial fade-in">
+          <div class="testimonial__quote-mark">“</div>
+          <p class="testimonial__text">Excelente suporte. Tive uma dúvida no checkout com Mercado Pago e fui atendida imediatamente via WhatsApp. Recomendo fortemente a plataforma.</p>
           <div class="testimonial__author">
-            <div class="testimonial__avatar">JS</div>
+            <div class="testimonial__avatar">CP</div>
             <div>
-              <p class="testimonial__name">Juliana Santos</p>
-              <p class="testimonial__role">Esteticista — São Paulo/SP</p>
+              <div class="testimonial__name">Dra. Camila Prado</div>
+              <div class="testimonial__role">Biomédica Esteta — Curitiba / PR</div>
             </div>
           </div>
         </article>
       </div>
     </div>
   </section>
-  <section class="section section--dark" id="guarantee">
+
+  <!-- ====== 7. GUARANTEE ====== -->
+  <section class="section" id="guarantee">
     <div class="container">
-      <h2 class="section__title section__title--light">Nossa garantia para você</h2>
+      <h2 class="section__title">Garantia e Segurança Técnica</h2>
+      <p class="section__subtitle">Compre com total conformidade sanitária e suporte logístico.</p>
       <div class="guarantee__items">
-        <div class="guarantee__item">
+        <div class="guarantee__item fade-in">
           <div class="guarantee__icon">🛡️</div>
-          <h3 class="guarantee__item-title">Garantia de 7 dias</h3>
-          <p class="guarantee__item-text">Produto chegou com problema? Troca ou reembolso garantido em 7 dias. Sem burocracia.</p>
+          <h3 class="guarantee__item-title">Autenticidade Garantida</h3>
+          <p class="guarantee__item-text" style="color: var(--gray);">Lotes lacrados de fábrica com rastreabilidade total e documentação fiscal completa.</p>
         </div>
-        <div class="guarantee__item">
-          <div class="guarantee__icon">📦</div>
-          <h3 class="guarantee__item-title">Entrega expressa</h3>
-          <p class="guarantee__item-text">Média de 2 a 3 dias úteis para todo Brasil. Rastreamento completo do pedido.</p>
+        <div class="guarantee__item fade-in">
+          <div class="guarantee__icon">🔄</div>
+          <h3 class="guarantee__item-title">Troca Imediata em 7 Dias</h3>
+          <p class="guarantee__item-text" style="color: var(--gray);">Reposição sem burocracia caso haja qualquer divergência na entrega.</p>
         </div>
-        <div class="guarantee__item">
-          <div class="guarantee__icon">📋</div>
-          <h3 class="guarantee__item-title">Nota fiscal em todo pedido</h3>
-          <p class="guarantee__item-text">Procedência garantida e documentação completa para sua clínica.</p>
+        <div class="guarantee__item fade-in">
+          <div class="guarantee__icon">🔒</div>
+          <h3 class="guarantee__item-title">Pagamento Blindado</h3>
+          <p class="guarantee__item-text" style="color: var(--gray);">Transações processadas pelo Mercado Pago com criptografia de ponta a ponta.</p>
         </div>
       </div>
     </div>
   </section>
-  <section class="section" id="urgency">
+
+  <!-- ====== 8. URGENCY SECTION ====== -->
+  <section class="section section--dark" id="urgency">
     <div class="container">
       <div class="urgency__content">
         <div>
-          <h2 class="section__title" style="text-align:left;">Estoque limitado — garanta seus produtos agora</h2>
-          <p style="font-size:17px;color:var(--gray);margin-top:12px;">Os produtos estéticos originais têm rotatividade alta. Quando o estoque acaba, o próximo lote pode demorar até 30 dias. <strong>Não deixe sua clínica parar por falta de produto.</strong></p>
+          <h2 class="section__title section__title--light" style="text-align: left; margin-bottom: 16px;">Lotes limitados para pronta entrega</h2>
+          <p style="color: rgba(255,255,255,0.8); font-size: 16px; margin-bottom: 24px;">Devido à alta demanda de clínicas parceiras e preservação da cadeia fria, nossos estoques são renovados semanalmente. Garanta seus insumos antes do fechamento do lote atual.</p>
+          <a href="#catalog" class="btn btn--primary">Garantir Meu Lote Agora</a>
         </div>
         <div>
-          <div class="urgency__counter-number" id="stockCounter">42</div>
-          <p style="text-align:center;color:var(--gray);">unidades restantes em estoque</p>
-          <div class="urgency__counter-bar"><div class="urgency__counter-bar-fill" style="width:35%;"></div></div>
+          <div class="urgency__counter-number">84%</div>
+          <p style="text-align: center; color: rgba(255,255,255,0.7); font-size: 14px;">Capacidade do lote semanal reservada</p>
+          <div class="urgency__counter-bar">
+            <div class="urgency__counter-bar-fill"></div>
+          </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- ====== 9. FAQ SECTION (6 PERGUNTAS) ====== -->
   <section class="section" id="faq">
-    <div class="container container--narrow">
-      <h2 class="section__title">Perguntas Frequentes</h2>
+    <div class="container">
+      <h2 class="section__title">Dúvidas Frequentes</h2>
+      <p class="section__subtitle">Esclarecimentos operacionais e técnicos sobre o nosso serviço.</p>
       <div class="faq__list">
         <details class="faq__item">
-          <summary class="faq__question">Os produtos são originais? <span>+</span></summary>
-          <div class="faq__answer">Sim, todos os produtos são originais de fábrica, adquiridos diretamente dos laboratórios. Cada pedido acompanha nota fiscal com a procedência completa.</div>
+          <summary class="faq__question">Os produtos são 100% originais e lacrados? <span>+</span></summary>
+          <div class="faq__answer">Sim. Todos os insumos comercializados pela Skincare Pro Store são adquiridos diretamente dos laboratórios oficiais e importadores autorizados, acompanhando número de lote, validade e nota fiscal.</div>
         </details>
         <details class="faq__item">
-          <summary class="faq__question">Quanto tempo leva a entrega? <span>+</span></summary>
-          <div class="faq__answer">A entrega é expressa, com média de 2 a 3 dias úteis para todo o Brasil. Você recebe o código de rastreamento assim que o pedido é despachado.</div>
+          <summary class="faq__question">Qual o prazo médio de entrega para minha região? <span>+</span></summary>
+          <div class="faq__answer">O prazo médio de entrega para capitais e principais regiões metropolitanas é de 2 a 3 dias úteis via frete expresso monitorado.</div>
         </details>
         <details class="faq__item">
-          <summary class="faq__question">Como funciona a garantia? <span>+</span></summary>
-          <div class="faq__answer">Se o produto chegar com qualquer problema, você tem 7 dias para solicitar troca ou reembolso. O processo é simples e sem burocracia — basta nos chamar no WhatsApp.</div>
+          <summary class="faq__question">Como funciona a manutenção da cadeia de frio? <span>+</span></summary>
+          <div class="faq__answer">Produtos termolábeis são embalados em caixas isotérmicas reforçadas com gelo refrigerante especializado, garantindo estabilidade térmica durante todo o percurso.</div>
         </details>
         <details class="faq__item">
-          <summary class="faq__question">Posso comprar mais de um produto no mesmo pedido? <span>+</span></summary>
-          <div class="faq__answer">Sim! O carrinho permite adicionar quantos produtos quiser. Todos vão num único pedido, com uma nota fiscal e uma entrega.</div>
+          <summary class="faq__question">Quais são as formas de pagamento aceitas? <span>+</span></summary>
+          <div class="faq__answer">Aceitamos PIX, Cartão de Crédito (em até 12x) e Saldo Mercado Pago através do checkout seguro integrado na plataforma.</div>
         </details>
         <details class="faq__item">
-          <summary class="faq__question">Como pago? <span>+</span></summary>
-          <div class="faq__answer">O pagamento é processado pelo Mercado Pago, com segurança total. Você pode pagar via Pix, cartão de crédito ou boleto — tudo direto no checkout.</div>
+          <summary class="faq__question">Quem pode realizar a compra dos produtos? <span>+</span></summary>
+          <div class="faq__answer">A venda é destinada exclusivamente a profissionais de saúde e estética habilitados (Médicos, Biomédicos, Farmacêuticos Estetas, Dentistas e Enfermeiros Estetas).</div>
         </details>
         <details class="faq__item">
-          <summary class="faq__question">Preciso de comprovação profissional para comprar? <span>+</span></summary>
-          <div class="faq__answer">Alguns produtos requerem comprovação profissional. Se tiver dúvida sobre um produto específico, fale conosco no WhatsApp antes de finalizar o pedido.</div>
+          <summary class="faq__question">Como acompanhar o rastreamento do meu pedido? <span>+</span></summary>
+          <div class="faq__answer">Assim que o pedido é faturado e despachado, você recebe o código de rastreamento por e-mail e atualizações automáticas via WhatsApp.</div>
         </details>
       </div>
     </div>
   </section>
-  <section class="section section--dark" id="final-cta">
-    <div class="container" style="text-align:center;">
-      <h2 class="section__title section__title--light">Não deixe seu próximo paciente esperando</h2>
-      <p class="section__subtitle" style="color:rgba(255,255,255,0.6);">Produtos originais, em estoque, na sua porta em até 3 dias úteis.</p>
-      <a href="#catalog" class="btn btn--primary btn--large btn--pulse">Acessar catálogo e pedir agora</a>
-      <p style="margin-top:16px;color:rgba(255,255,255,0.4);font-size:14px;">✅ Garantia de 7 dias · ✅ Nota fiscal · ✅ Entrega expressa</p>
+
+  <!-- ====== 10. FINAL CTA ====== -->
+  <section class="cta-final" id="final-cta">
+    <div class="container">
+      <h2 class="cta-final__title">Abasteça sua clínica com segurança e economia</h2>
+      <p class="cta-final__subtitle">Monte seu pedido com as melhores marcas do mercado estético e receba em tempo recorde.</p>
+      <a href="#catalog" class="btn btn--primary btn--large">Montar Pedido no Catálogo</a>
     </div>
   </section>
+
+  <!-- ====== 11. FOOTER ====== -->
   <footer class="footer">
     <div class="container">
       <div class="footer__grid">
         <div>
-          <p class="footer__logo">Skincare Pro Store</p>
-          <p>Produtos estéticos originais para profissionais. Entrega expressa, nota fiscal e preço de fábrica.</p>
+          <div class="footer__logo">Skincare Pro Store</div>
+          <p>Distribuição especializada de produtos estéticos de alto padrão para profissionais da saúde em todo o Brasil.</p>
         </div>
         <div>
-          <p style="font-weight:600;color:white;margin-bottom:12px;">Navegação</p>
-          <p><a href="#catalog" style="color:inherit;">Catálogo</a></p>
-          <p><a href="#faq" style="color:inherit;">Dúvidas</a></p>
-          <p><a href="#guarantee" style="color:inherit;">Garantia</a></p>
+          <h4 class="footer__heading">Navegação</h4>
+          <ul class="footer__list">
+            <li><a href="#hero">Início</a></li>
+            <li><a href="#catalog">Catálogo de Produtos</a></li>
+            <li><a href="#guarantee">Garantia de Qualidade</a></li>
+            <li><a href="#faq">Dúvidas Frequentes</a></li>
+          </ul>
         </div>
         <div>
-          <p style="font-weight:600;color:white;margin-bottom:12px;">Contato</p>
-          <p><a href="https://wa.me/5531984815086" target="_blank" rel="noopener" style="color:inherit;">WhatsApp: (31) 98481-5086</a></p>
+          <h4 class="footer__heading">Contato Direto</h4>
+          <ul class="footer__list">
+            <li>WhatsApp: (31) 98481-5086</li>
+            <li>Atendimento: Seg à Sex, 08h às 18h</li>
+            <li>Belo Horizonte — MG</li>
+          </ul>
         </div>
       </div>
       <div class="footer__bottom">
-        <p>© 2026 Skincare Pro Store. Todos os direitos reservados. CNPJ: [inserir CNPJ]</p>
+        <p>&copy; 2026 Skincare Pro Store. Todos os direitos reservados. Venda restrita a profissionais habilitados.</p>
       </div>
     </div>
   </footer>
-  <!-- ====== CARRINHO / SIDEBAR ====== -->
-  <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+  <!-- ====== CARRINHO SIDEBAR & OVERLAY ====== -->
+  <div class="cart-overlay" id="cartOverlay"></div>
   <aside class="cart-sidebar" id="cartSidebar">
     <div class="cart-header">
-      <h3 style="font-size:20px;font-weight:700;">Seu Carrinho</h3>
-      <button class="cart-close" onclick="closeCart()" aria-label="Fechar carrinho">&times;</button>
+      <h3 style="font-size: 18px; font-weight: 700;">Seu Carrinho de Compras</h3>
+      <button class="cart-close" id="cartCloseBtn" aria-label="Fechar Carrinho">&times;</button>
     </div>
-    <div class="cart-items" id="cartItems">
-      <p class="cart-empty">Seu carrinho está vazio.<br>Adicione produtos do catálogo.</p>
+    
+    <div class="cart-items" id="cartItemsContainer">
+      <p class="cart-empty">Seu carrinho está vazio.</p>
     </div>
+    
     <div class="cart-footer">
       <div class="cart-customer-fields">
-        <input type="text" id="customerName" placeholder="Seu nome completo" autocomplete="name">
-        <input type="email" id="customerEmail" placeholder="Seu e-mail" autocomplete="email">
-        <input type="tel" id="customerPhone" placeholder="Seu WhatsApp (com DDD)" autocomplete="tel">
+        <input type="text" id="custName" placeholder="Seu Nome Completo" required>
+        <input type="email" id="custEmail" placeholder="Seu E-mail Profissional" required>
+        <input type="tel" id="custPhone" placeholder="Seu WhatsApp (com DDD)" required>
       </div>
+      
       <div class="cart-total">
-        <span>Total:</span>
-        <span class="cart-total-value" id="cartTotal">R$ 0,00</span>
+        <span>Total do Pedido:</span>
+        <span class="cart-total-value" id="cartTotalValue">R$ 0,00</span>
       </div>
-      <button class="btn btn--primary btn--block btn--pulse" id="checkoutBtn" onclick="abrirPagamento()">
+      
+      <button type="button" class="btn btn--primary btn--block" id="btnCheckoutMP" onclick="abrirPagamento()">
         Pagar com Mercado Pago
       </button>
+
+      <button type="button" class="btn btn--secondary btn--block" id="btnCheckoutWA" style="margin-top: 8px;" onclick="abrirWhatsAppCheckout()">
+        Finalizar via WhatsApp
+      </button>
+      
       <div class="wallet-brick-container" id="walletBrick_container"></div>
     </div>
   </aside>
-  <script>
-    // ====== SDK MERCADO PAGO ======
-    // APP_USR-2ec19537-ade1-47cb-a5d3-477b4ae66b7d
-    const mp = new MercadoPago('SEU_PUBLIC_KEY', { locale: 'pt-BR' });
 
-    // ====== ESTADO DO CARRINHO ======
+  <!-- ====== LÓGICA JAVASCRIPT COMPLETA (SEM DUPLICAÇÃO) ====== -->
+  <script>
+    // ====== INICIALIZAÇÃO DO SDK MERCADO PAGO ======
+    const mp = new MercadoPago("APP_USR-2ec19537-ade1-47cb-a5d3-477b4ae66b7d", {
+      locale: "pt-BR"
+    });
+
+    // ====== ESTADO DO CARRINHO E CONTROLADORES ======
     let cart = [];
     let brickController = null;
+    let isProcessing = false;
 
-    // ====== PRODUTOS (preços reais) ======
+    // ====== TABELA OFICIAL DE PRODUTOS ======
     const PRODUCTS = {
-      'Dysport': 1600,
-      'Sculptra': 1600,
-      'LineBody Hard': 1600,
-      'LineBody Soft': 1600,
-      'Nabota': 1600,
-      'Momm': 1600,
+      'Dysport': 1600,<br/>
+      'Sculptra': 1600,<br/>
+      'LineBody Hard': 1600,<br/>
+      'LineBody Soft': 1600,<br/>
+      'Nabota': 1600,<br/>
+      'Momm': 1600,<br/>
       'Botox Allergan': 1600
     };
 
-    // ====== FUNÇÕES DO CARRINHO ======
-    function addToCart(name, price) {
-      const existing = cart.find(item => item.name === name);
-      if (existing) {
-        existing.qty++;
-      } else {
-        cart.push({ name, price, qty: 1 });
-      }
-      updateCartUI();
-      openCart();
+    // ====== GERADOR DE IDENTIFICADOR DE PEDIDO ======
+    function gerarPedidoId() {
+      return 'SKP' + Date.now() + Math.floor(Math.random() * 1000);
     }
 
-    function removeFromCart(name) {
-      cart = cart.filter(item => item.name !== name);
-      updateCartUI();
-    }
-
-    function changeQty(name, delta) {
-      const item = cart.find(i => i.name === name);
-      if (!item) return;
-      item.qty += delta;
-      if (item.qty <= 0) {
-        cart = cart.filter(i => i.name !== name);
-      }
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      const cartItemsEl = document.getElementById('cartItems');
-      const cartCountEl = document.getElementById('cartCount');
-      const cartTotalEl = document.getElementById('cartTotal');
-      if (cart.length === 0) {
-        cartItemsEl.innerHTML = '<p class="cart-empty">Seu carrinho está vazio.<br>Adicione produtos do catálogo.</p>';
-        cartCountEl.textContent = '0';
-        cartTotalEl.textContent = 'R$ 0,00';
-        return;
-      }
-      let total = 0;
-      let html = '';
-      cart.forEach(item => {
-        total += item.price * item.qty;
-        html += `
-          <div class="cart-item">
-            <div>
-              <p class="cart-item__name">${item.name}</p>
-              <p class="cart-item__price">R$ ${item.price.toFixed(2)} × ${item.qty}</p>
-            </div>
-            <div class="cart-item__controls">
-              <button class="qty-btn" onclick="changeQty('${item.name}', -1)">−</button>
-              <span class="qty-value">${item.qty}</span>
-              <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
-            </div>
-          </div>
-        `;
-      });
-      cartItemsEl.innerHTML = html;
-      cartCountEl.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
-      cartTotalEl.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
-    }
-
+    // ====== FUNÇÕES DE CONTROLE DO CARRINHO ======
     function openCart() {
       document.getElementById('cartSidebar').classList.add('cart-sidebar--open');
       document.getElementById('cartOverlay').classList.add('cart-overlay--active');
@@ -612,169 +713,324 @@
       document.getElementById('cartOverlay').classList.remove('cart-overlay--active');
     }
 
-    document.getElementById('floatingCart').addEventListener('click', openCart);
-
-    // ====== GERAR ID DO PEDIDO ======
-    function gerarPedidoId() {
-      return 'SKP' + Date.now() + Math.floor(Math.random() * 1000);
-    }
-
-    // ====== WHATSAPP FALLBACK ======
-    function abrirWhatsAppCheckout() {
-      var nome = document.getElementById('customerName').value.trim();
-      var email = document.getElementById('customerEmail').value.trim();
-      var telefone = document.getElementById('customerPhone').value.trim();
-      var pedidoId = gerarPedidoId();
-      var itens = cart.map(function(item) {
-        return item.name + ' x' + item.qty + ' (R$ ' + (item.price * item.qty).toFixed(2) + ')';
-      }).join(', ');
-      var total = cart.reduce(function(sum, i) { return sum + i.price * i.qty; }, 0);
-      var msg = 'Olá! Sou ' + nome + '.\n';
-      msg += 'E-mail: ' + email + '\n';
-      msg += 'WhatsApp: ' + telefone + '\n';
-      msg += 'Pedido #' + pedidoId + '\n';
-      msg += 'Itens: ' + itens + '\n';
-      msg += 'Total: R$ ' + total.toFixed(2);
-      window.open('https://wa.me/5531984815086?text=' + encodeURIComponent(msg), '_blank');
-    }
-
-    // ====== CHECKOUT MERCADO PAGO ======
-    let checkoutBtn = document.getElementById('checkoutBtn');
-
-    async function abrirPagamento() {
-      var nome = document.getElementById('customerName').value.trim();
-      var email = document.getElementById('customerEmail').value.trim();
-      var telefone = document.getElementById('customerPhone').value.trim();
-
-      if (!nome || !email || !telefone) {
-        alert('Por favor, preencha seu nome, e-mail e WhatsApp para finalizar o pedido.');
-        return;
+    function addToCart(productName) {
+      if (!PRODUCTS[productName]) return;
+      const existing = cart.find(item => item.name === productName);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          name: productName,<br/>
+          price: PRODUCTS[productName],<br/>
+          quantity: 1
+        });
       }
+      updateCartUI();
+      openCart();
+    }
+
+    function removeFromCart(productName) {
+      cart = cart.filter(item => item.name !== productName);
+      updateCartUI();
+    }
+
+    function changeQty(productName, delta) {
+      const item = cart.find(i => i.name === productName);
+      if (item) {
+        item.quantity += delta;
+        if (item.quantity <= 0) {
+          removeFromCart(productName);
+        } else {
+          updateCartUI();
+        }
+      }
+    }
+
+    function calculateTotal() {
+      return cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    }
+
+    function updateCartUI() {
+      const container = document.getElementById('cartItemsContainer');
+      const badge = document.getElementById('cartCount');
+      const totalEl = document.getElementById('cartTotalValue');
+      
+      const totalUnits = cart.reduce((acc, item) => acc + item.quantity, 0);
+      badge.textContent = totalUnits;
+      
+      const totalAmount = calculateTotal();
+      totalEl.textContent = 'R$ ' + totalAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      
       if (cart.length === 0) {
-        alert('Seu carrinho está vazio. Adicione produtos antes de finalizar.');
+        container.innerHTML = '<p class="cart-empty">Seu carrinho está vazio.</p>';
+        resetBrick();
+        return;
+      }
+      
+      let html = '';
+      cart.forEach(item => {
+        html += `
+          <div class="cart-item">
+            <div>
+              <div class="cart-item__name">${item.name}</div>
+              <div class="cart-item__price">R$ ${item.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+              <div class="cart-item__controls">
+                <button class="qty-btn" onclick="changeQty('${item.name}', -1)">-</button>
+                <span class="qty-value">${item.quantity}</span>
+                <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
+              </div>
+            </div>
+            <div>
+              <button style="background:none; color:var(--primary); font-size:13px; font-weight:600;" onclick="removeFromCart('${item.name}')">Remover</button>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+      resetBrick();
+    }
+
+    function resetBrick() {
+      if (brickController) {
+        try {
+          brickController.unmount();
+        } catch (e) {
+          console.warn("Aviso ao desmontar Brick:", e);
+        }
+        brickController = null;
+      }
+      document.getElementById('walletBrick_container').innerHTML = '';
+      const btnMP = document.getElementById('btnCheckoutMP');
+      if (btnMP) {
+        btnMP.style.display = 'block';
+        btnMP.textContent = 'Pagar com Mercado Pago';
+        btnMP.disabled = false;
+      }
+    }
+
+    // ====== WHATSAPP CHECKOUT & FALLBACK ======
+    function abrirWhatsAppCheckout() {
+      const name = document.getElementById('custName').value.trim();
+      const email = document.getElementById('custEmail').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      
+      if (cart.length === 0) {
+        alert("Adicione ao menos um produto ao carrinho antes de continuar.");
+        return;
+      }
+      
+      let msg = "Olá! Gostaria de finalizar o seguinte pedido na Skincare Pro Store:
+
+";
+      if (name) msg += `*Cliente:* ${name}
+`;
+      if (email) msg += `*E-mail:* ${email}
+`;
+      if (phone) msg += `*Telefone:* ${phone}
+
+`;
+      
+      msg += "*Itens do Pedido:*
+";
+      cart.forEach(item => {
+        msg += `- ${item.quantity}x ${item.name} (R$ ${(item.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })})
+`;
+      });
+      
+      msg += `
+*Total:* R$ ${calculateTotal().toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+`;
+      msg += `*ID de Referência:* ${gerarPedidoId()}`;
+      
+      const url = `https://wa.me/5531984815086?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    }
+
+    // ====== CHECKOUT MERCADO PAGO (FUNÇÃO ÚNICA E ROBUSTA) ======
+    async function abrirPagamento() {
+      if (isProcessing) return;
+
+      const name = document.getElementById('custName').value.trim();
+      const email = document.getElementById('custEmail').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const btnMP = document.getElementById('btnCheckoutMP');
+
+      // Validações
+      if (cart.length === 0) {
+        alert("Seu carrinho está vazio. Adicione um produto.");
+        return;
+      }
+      if (!name) {
+        alert("Por favor, preencha seu nome completo.");
+        document.getElementById('custName').focus();
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        alert("Por favor, informe um endereço de e-mail válido.");
+        document.getElementById('custEmail').focus();
+        return;
+      }
+      if (!phone || phone.length < 8) {
+        alert("Por favor, preencha um número de WhatsApp válido.");
+        document.getElementById('custPhone').focus();
         return;
       }
 
-      var pedidoId = gerarPedidoId();
-      checkoutBtn.textContent = 'Iniciando pagamento...';
-      checkoutBtn.disabled = true;
+      isProcessing = true;
+      btnMP.disabled = true;
+      btnMP.textContent = 'Gerando pagamento seguro...';
+
+      const pedidoId = gerarPedidoId();
+      const payload = {
+        orderId: pedidoId,<br/>
+        payer: {<br/>
+          name: name,<br/>
+          email: email,<br/>
+          phone: phone
+        },
+        items: cart.map(item => ({<br/>
+          title: item.name,<br/>
+          unit_price: Number(item.price),<br/>
+          quantity: Number(item.quantity),<br/>
+          currency_id: 'BRL'
+        }))
+      };
 
       try {
-        var response = await fetch('/.netlify/functions/create-preference', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            items: cart.map(function(item) {
-              return {
-                id: item.name.replace(/\s+/g, '-').toLowerCase(),
-                title: item.name,
-                description: 'Produto estético original — Skincare Pro Store',
-                quantity: item.qty,
-                unit_price: item.price,
-                currency_id: 'BRL'
-              };
-            }),
-            payer: { name: nome, email: email, phone: { number: telefone } },
-            external_reference: pedidoId,
-            statement_descriptor: 'SKINCAREPROSTORE',
-            back_urls: {
-              success: window.location.origin + '/?status=success',
-              pending: window.location.origin + '/?status=pending',
-              failure: window.location.origin + '/?status=failure'
-            },
-            auto_return: 'approved',
-            binary_mode: true
-          })
+        const response = await fetch('/.netlify/functions/create-preference', {
+          method: 'POST',<br/>
+          headers: { 'Content-Type': 'application/json' },<br/>
+          body: JSON.stringify(payload)
         });
 
-        var data = await response.json();
-
-        if (!data.preferenceId) {
-          throw new Error('Resposta inválida da API: ' + JSON.stringify(data));
+        if (!response.ok) {
+          throw new Error(`Erro no servidor: ${response.statusText}`);
         }
 
-        // Limpar container do brick
+        const data = await response.json();
+        const preferenceId = data.id || data.preferenceId;
+
+        if (!preferenceId) {
+          throw new Error("ID de preferência não retornado pelo servidor.");
+        }
+
+        // Desmonta instância anterior e renderiza o Wallet Brick
         if (brickController) {
           await brickController.unmount();
           brickController = null;
         }
-        var brickContainer = document.getElementById('walletBrick_container');
-        brickContainer.innerHTML = '';
-        checkoutBtn.style.display = 'none';
 
-        // Garantir que a sidebar está aberta
-        openCart();
-        await new Promise(resolve => setTimeout(resolve, 100));
+        document.getElementById('walletBrick_container').innerHTML = '';
+        btnMP.style.display = 'none';
 
-        // Renderizar o Wallet Brick
-        brickController = await mp.bricks().create('wallet', 'walletBrick_container', {
-          initialization: {
-            preferenceId: data.preferenceId,
-            redirectMode: 'modal'
+        const bricksBuilder = mp.bricks();
+        brickController = await bricksBuilder.create('wallet', 'walletBrick_container', {
+          initialization: {<br/>
+            preferenceId: preferenceId
+          },
+          customization: {<br/>
+            texts: {<br/>
+              valueProp: 'smart_option'
+            }
+          },
+          callbacks: {<br/>
+            onError: (error) => {<br/>
+              console.error("Erro interno no Brick:", error);
+              alert("Houve uma inconsistência ao renderizar o pagamento. Redirecionando para o WhatsApp.");
+              abrirWhatsAppCheckout();
+            }
           }
         });
 
-        checkoutBtn.textContent = 'Aguardando pagamento...';
-        checkoutBtn.disabled = false;
-
-      } catch (error) {
-        console.error('Erro:', error);
-        if (brickController) {
-          await brickController.unmount();
-          brickController = null;
-        }
-        var brickContainer = document.getElementById('walletBrick_container');
-        brickContainer.innerHTML = '';
-        checkoutBtn.style.display = '';
-        checkoutBtn.textContent = 'Pagar com Mercado Pago';
-        checkoutBtn.disabled = false;
-        alert('Erro ao iniciar pagamento: ' + error.message + '\n\nVocê será direcionado para o WhatsApp.');
+      } catch (err) {
+        console.error("Falha na integração com Mercado Pago:", err);
+        alert("Não foi possível conectar com o checkout automatizado no momento. Você será direcionado para finalizar o pedido diretamente com nosso atendimento via WhatsApp.");
+        resetBrick();
         abrirWhatsAppCheckout();
+      } finally {
+        isProcessing = false;
+        if (btnMP && btnMP.style.display !== 'none') {
+          btnMP.disabled = false;
+          btnMP.textContent = 'Pagar com Mercado Pago';
+        }
       }
     }
 
-    // ====== FILTROS DO CATÁLOGO ======
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('filter-btn--active'));
-        this.classList.add('filter-btn--active');
-        var filter = this.dataset.filter;
-        document.querySelectorAll('.product-card').forEach(card => {
-          if (filter === 'all' || card.dataset.category === filter) {
-            card.style.display = '';
-          } else {
-            card.style.display = 'none';
-          }
+    // ====== EVENT LISTENERS & INICIALIZAÇÃO ======
+    document.addEventListener('DOMContentLoaded', () => {
+      // Controle do Carrinho Lateral
+      document.getElementById('floatingCart').addEventListener('click', openCart);
+      document.getElementById('cartCloseBtn').addEventListener('click', closeCart);
+      document.getElementById('cartOverlay').addEventListener('click', closeCart);
+
+      // Filtros do Catálogo
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const productCards = document.querySelectorAll('.product-card');
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('filter-btn--active'));
+          btn.classList.add('filter-btn--active');
+          const filter = btn.getAttribute('data-filter');
+
+          productCards.forEach(card => {
+            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
         });
       });
-    });
 
-    // ====== BARRA DE PROGRESSO ======
-    window.addEventListener('scroll', function() {
-      var scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-      document.getElementById('scrollProgress').style.width = scrolled + '%';
-    });
-
-    // ====== FADE-IN AO SCROLL ======
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('fade-in--visible');
-        }
+      // Barra de Progresso de Leitura
+      window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById('scrollProgress').style.width = scrolled + '%';
       });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    // ====== VERIFICAR STATUS DE RETORNO (URL PARAMS) ======
-    window.addEventListener('DOMContentLoaded', function() {
-      var params = new URLSearchParams(window.location.search);
-      var status = params.get('status');
-      if (status === 'success') {
-        alert('✅ Pagamento aprovado! Seu pedido está sendo processado e chegará em 2-3 dias úteis.');
-      } else if (status === 'pending') {
-        alert('⏳ Pagamento pendente. Assim que for confirmado, seu pedido será enviado.');
-      } else if (status === 'failure') {
-        alert('❌ Pagamento não aprovado. Tente novamente ou finalize via WhatsApp.');
+      // Animação de Entrada (Fade-in)
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in--visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+      // Verificação de Status via Parâmetros de URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const status = urlParams.get('status') || urlParams.get('collection_status');
+      const order = urlParams.get('order') || urlParams.get('external_reference');
+      const bannerContainer = document.getElementById('statusBannerContainer');
+
+      if (status && bannerContainer) {
+        let msgHtml = '';
+        if (status === 'approved' || status === 'success') {
+          msgHtml = `
+            <div class="status-alert status-alert--success">
+              ✅ <strong>Pagamento Aprovado com Sucesso!</strong> Seu pedido <strong>#${order || ''}</strong> já está sendo separado para despacho prioritário.
+            </div>
+          `;
+        } else if (status === 'pending' || status === 'in_process') {
+          msgHtml = `
+            <div class="status-alert status-alert--pending">
+              ⏳ <strong>Pagamento em Análise:</strong> Assim que a compensação bancária ou do PIX for concluída, você receberá a confirmação por e-mail. Pedido: <strong>#${order || ''}</strong>.
+            </div>
+          `;
+        } else if (status === 'rejected' || status === 'failure') {
+          msgHtml = `
+            <div class="status-alert status-alert--failure">
+              ❌ <strong>Não foi possível aprovar a transação:</strong> Revise seus dados de pagamento ou conclua sua compra diretamente pelo nosso canal no WhatsApp.
+            </div>
+          `;
+        }
+        bannerContainer.innerHTML = msgHtml;
+        bannerContainer.scrollIntoView({ behavior: 'smooth' });
       }
     });
   </script>
