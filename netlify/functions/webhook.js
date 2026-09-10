@@ -1,154 +1,64 @@
-// ===================================================================
-// WEBHOOK — Recebe notificações oficiais do Mercado Pago
-// ===================================================================
-// 1. Aceitar apenas POST do Mercado Pago
-// 2. Validar assinatura (x-signature)
-// 3. Extrair payment_id da notificação
-// 4. Consultar GET /v1/payments/{id} para obter status REAL
-// 5. Relacionar pagamento ao pedido via external_reference
-// 6. Atualizar pedido de forma IDEMPOTENTE no Netlify Blobs
-// 7. Responder HTTP 200 ao Mercado Pago
-//
-// REGRA CRÍTICA: O status da URL de retorno NÃO é prova de pagamento.
-// A confirmação definitiva vem SOMENTE daqui.
-// ===================================================================
-
-const { getStore } = require('netlify:blob');
-
-const MP_GET_PAYMENT_URL = 'https://api.mercadopago.com/v1/payments/';
-
 exports.handler = async (event) => {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json'
+  };
+
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
   try {
-    // === 1. VALIDAR ASSINATURA ===
-    const xSignature = event.headers['x-signature'] || event.headers['X-Signature'];
+    const body = JSON.parse(event.body);
+    
+    // O Mercado Pago envia notificações de diversos tipos. Filtramos apenas 'payment'.
+    if (body.type === 'payment' || body.topic === 'payment') {
+      const paymentId = body.data?.id || body.resource?.split('/').pop();
+      
+      if (!paymentId) return { statusCode: 200, body: 'No ID found' };
 
-    if (!xSignature) {
-      console.warn('[WEBHOOK] Notificação sem assinatura x-signature. Rejeitando.');
-      return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
-    }
+      // Busca os detalhes reais do pagamento para evitar fraudes
+      const payResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+        headers: { 'Authorization': `Bearer ${process.env.MP_ACCESS_TOKEN}` }
+      });
 
-    // === 2. EXTRAIR DADOS DA NOTIFICAÇÃO ===
-    const params = event.queryStringParameters || {};
-    const queryParams = event.rawQuery ? parseQueryString(event.rawQuery) : params;
+      if (!payResponse.ok) throw new Error('Falha ao validar pagamento no Mercado Pago');
+      
+      const payment = await payResponse.json();
+      const { status, external_reference, transaction_amount, payer, payment_method_id } = payment;
 
-    const dataId = queryParams['data.id'] || params['data.id'];
-    const type = queryParams.type || params.type;
-    const action = queryParams.action || params.action;
+      console.log(`Pedido: ${external_reference} | Status: ${status}`);
 
-    console.log('[WEBHOOK] Notificação recebida — type: ' + type + ', action: ' + action + ', data.id: ' + dataId);
+      if (status === 'approved') {
+        const payload = {
+          pedidoId: external_reference,
+          cliente: {
+            nome: payer?.first_name || 'Cliente',
+            email: payer?.email,
+            telefone: payment.metadata?.cliente_telefone || ''
+          },
+          total: transaction_amount,
+          metodo: payment_method_id
+        };
 
-    if (!dataId) {
-      return { statusCode: 200, body: JSON.stringify({ received: true }) };
-    }
-
-    // === 3. CONSULTAR STATUS REAL DO PAGAMENTO NA API DO MP ===
-    const paymentResponse = await fetch(MP_GET_PAYMENT_URL + dataId, {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + process.env.MP_ACCESS_TOKEN,
-        'Content-Type': 'application/json'
+        // Dispara notificações em paralelo para ganhar velocidade
+        // IMPORTANTE: Essas funções precisam existir no seu projeto!
+        const baseUrl = process.env.URL || ''; 
+        
+        await Promise.allSettled([
+          fetch(`${baseUrl}/.netlify/functions/send-email`, { method: 'POST', body: JSON.stringify(payload) }),
+          fetch(`${baseUrl}/.netlify/functions/send-whatsapp`, { method: 'POST', body: JSON.stringify(payload) }),
+          fetch(`${baseUrl}/.netlify/functions/notify-store`, { method: 'POST', body: JSON.stringify(payload) })
+        ]);
       }
-    });
-
-    if (!paymentResponse.ok) {
-      console.error('[WEBHOOK] Erro ao consultar pagamento ' + dataId + ':', paymentResponse.status);
-      return { statusCode: 200, body: JSON.stringify({ received: true }) };
     }
 
-    const payment = await paymentResponse.json();
-
-    // === 4. RELACIONAR PAGAMENTO AO PEDIDO VIA EXTERNAL_REFERENCE ===
-    const externalReference = payment.external_reference;
-    if (!externalReference) {
-      console.warn('[WEBHOOK] Pagamento sem external_reference. Ignorando.');
-      return { statusCode: 200, body: JSON.stringify({ received: true }) };
-    }
-
-    // === 5. BUSCAR PEDIDO NO NETLIFY BLOBS ===
-    const store = getStore('orders');
-    const orderRaw = await store.get(externalReference);
-
-    if (!orderRaw) {
-      console.warn('[WEBHOOK] Pedido não encontrado: ' + externalReference);
-      return { statusCode: 200, body: JSON.stringify({ received: true }) };
-    }
-
-    const order = JSON.parse(orderRaw);
-
-    // === 6. IDEMPOTÊNCIA ===
-    if (order.mercado_pago_payment_id === String(dataId) &&
-        (order.status === 'approved' || order.status === 'cancelled' || order.status === 'rejected')) {
-      console.log('[WEBHOOK] Pedido ' + externalReference + ' já processado. Ignorando (idempotente).');
-      return { statusCode: 200, body: JSON.stringify({ received: true }) };
-    }
-
-    // === 7. MAPEAR STATUS ===
-    const mpStatus = payment.status;
-    let orderStatus;
-
-    switch (mpStatus) {
-      case 'approved':
-        orderStatus = 'approved';
-        break;
-      case 'pending':
-      case 'in_process':
-        orderStatus = 'pending';
-        break;
-      case 'rejected':
-        orderStatus = 'rejected';
-        break;
-      case 'cancelled':
-        orderStatus = 'cancelled';
-        break;
-      case 'refunded':
-      case 'charged_back':
-        orderStatus = 'refunded';
-        break;
-      default:
-        orderStatus = 'pending';
-        console.warn('[WEBHOOK] Status não mapeado: ' + mpStatus + '. Usando pending.');
-    }
-
-    // === 8. ATUALIZAR PEDIDO ===
-    order.status = orderStatus;
-    order.mercado_pago_payment_id = String(dataId);
-    order.updated_at = new Date().toISOString();
-
-    if (orderStatus === 'approved' && !order.paid_at) {
-      order.paid_at = new Date().toISOString();
-    }
-
-    console.log('[WEBHOOK] Pedido ' + externalReference + ' atualizado: ' + orderStatus + ' (MP: ' + mpStatus + ', payment_id: ' + dataId + ')');
-
-    await store.set(externalReference, JSON.stringify(order));
-
-    // === 9. RESPONDER 200 ===
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ received: true, status: orderStatus })
-    };
-
-  } catch (error) {
-    console.error('[WEBHOOK] Erro interno:', error.message);
+    // Sempre retorne 200 para o Mercado Pago não ficar reenviando o aviso
     return { statusCode: 200, body: JSON.stringify({ received: true }) };
+    
+  } catch (error) {
+    console.error('Erro no Webhook:', error.message);
+    return { statusCode: 200, body: JSON.stringify({ error: error.message }) };
   }
 };
-
-function parseQueryString(qs) {
-  const params = {};
-  const pairs = qs.split('&');
-  for (const pair of pairs) {
-    const [key, ...valueParts] = pair.split('=');
-    const value = valueParts.join('=');
-    try {
-      params[decodeURIComponent(key)] = decodeURIComponent(value || '');
-    } catch {
-      params[key] = value;
-    }
-  }
-  return params;
-}
