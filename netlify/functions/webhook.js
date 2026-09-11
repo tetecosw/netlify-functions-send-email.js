@@ -1,3 +1,4 @@
+const { getStore } = require('@netlify/blobs');
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -31,12 +32,26 @@ exports.handler = async (event) => {
       console.log(`Pedido: ${external_reference} | Status: ${status}`);
 
       if (status === 'approved') {
-        const payload = {
+      const store = getStore('orders');
+
+await store.set(
+  external_reference,
+  JSON.stringify({
+    order_id: external_reference,
+    status: 'approved',
+    amount: transaction_amount,
+    currency: 'BRL',
+    items: payment.additional_info?.items || [],
+    created_at: payment.date_created,
+    paid_at: payment.date_approved
+  })
+);  
+const payload = {
           pedidoId: external_reference,
           cliente: {
             nome: payer?.first_name || 'Cliente',
             email: payer?.email,
-            telefone: payment.metadata?.cliente_telefone || ''
+            telefone: payer?.phone?.number || ''
           },
           total: transaction_amount,
           metodo: payment_method_id

@@ -33,19 +33,19 @@ exports.handler = async (event, context) => {
     }
 
     const preference = {
-      items: data.items,
-      payer: data.payer,
-      external_reference: data.external_reference || 'SKP_ORDER',
-      back_urls: {
-        success: `${data.origin}/?status=success`,
-        failure: `${data.origin}/?status=failure`,
-        pending: `${data.origin}/?status=pending`
-      },
-      binary_mode: true,
-      statement_descriptor: 'SKINCAREPRO'
-    };
+  items: data.items,
+  payer: data.payer,
+  external_reference: data.external_reference || 'SKP_ORDER',
+  back_urls: {
+    success: `${data.origin}/?status=success`,
+    failure: `${data.origin}/?status=failure`,
+    pending: `${data.origin}/?status=pending`
+  },
+  binary_mode: true,
+  statement_descriptor: 'SKINCAREPRO'
+};
 
-    const response = await preferenceClient.create({ body: preference });
+const response = await preferenceClient.create({ body: preference });
 
     return {
       statusCode: 200,
