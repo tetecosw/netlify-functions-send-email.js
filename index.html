@@ -726,18 +726,53 @@ const mp = new MercadoPago('APP_USR-2ec19537-ade1-47cb-a5d3-477b4ae66b7d', {
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    // ====== VERIFICAR STATUS DE RETORNO (URL PARAMS) ======
-    window.addEventListener('DOMContentLoaded', function() {
-      var params = new URLSearchParams(window.location.search);
-      var status = params.get('status');
-      if (status === 'success') {
-        alert('✅ Pagamento aprovado! Seu pedido está sendo processado e chegará em 2-3 dias úteis.');
-      } else if (status === 'pending') {
-        alert('⏳ Pagamento pendente. Assim que for confirmado, seu pedido será enviado.');
-      } else if (status === 'failure') {
-        alert('❌ Pagamento não aprovado. Tente novamente ou finalize via WhatsApp.');
-      }
-    });
+    // ====== VERIFICAR STATUS REAL DO PEDIDO ======
+// ====== VERIFICAR STATUS REAL DO PEDIDO ======
+window.addEventListener('DOMContentLoaded', async function() {
+  var params = new URLSearchParams(window.location.search);
+
+  var statusUrl = params.get('status');
+  var orderId = params.get('orderId');
+
+  if (!orderId) {
+    console.log('Nenhum orderId encontrado na URL.');
+    return;
+  }
+
+  try {
+    var response = await fetch(
+      `/.netlify/functions/get-order?orderId=${encodeURIComponent(orderId)}`
+    );
+
+    var data = await response.json();
+
+    if (!response.ok) {
+      console.error('Erro ao consultar pedido:', data);
+      return;
+    }
+
+    console.log('Status real do pedido:', data.status);
+
+    if (data.status === 'approved') {
+      alert(
+        '✅ Pagamento aprovado! Seu pedido está sendo processado e chegará em 2-3 dias úteis.'
+      );
+    } else if (data.status === 'pending') {
+      alert(
+        '⏳ Pagamento pendente. Assim que for confirmado, seu pedido será enviado.'
+      );
+    } else if (data.status === 'rejected') {
+      alert(
+        '❌ Pagamento não aprovado. Tente novamente ou finalize via WhatsApp.'
+      );
+    } else {
+      console.log('Pedido ainda sem status final:', data.status);
+    }
+
+  } catch (error) {
+    console.error('Erro ao consultar status do pedido:', error);
+  }
+});
   </script>
 </body>
 </html>
