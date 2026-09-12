@@ -61,11 +61,13 @@ exports.handler = async (event, context) => {
       payer: data.payer || {},
       external_reference: orderId,
 
-      back_urls: {
-        success: `${data.origin}/?status=success`,
-        failure: `${data.origin}/?status=failure`,
-        pending: `${data.origin}/?status=pending`
-      },
+     back_urls: {
+  success: `${data.origin}/?status=success&orderId=${encodeURIComponent(orderId)}`,
+  failure: `${data.origin}/?status=failure&orderId=${encodeURIComponent(orderId)}`,
+  pending: `${data.origin}/?status=pending&orderId=${encodeURIComponent(orderId)}`
+},
+
+auto_return: 'approved',
 
       binary_mode: true,
       statement_descriptor: 'SKINCAREPRO'
