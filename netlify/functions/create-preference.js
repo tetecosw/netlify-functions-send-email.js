@@ -58,7 +58,6 @@ exports.handler = async (event, context) => {
     // Preferência do Mercado Pago
     const preference = {
       items: data.items,
-      payer: data.payer || {},
       external_reference: orderId,
 
      back_urls: {
