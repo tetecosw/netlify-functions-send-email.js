@@ -728,16 +728,21 @@ const mp = new MercadoPago('APP_USR-2ec19537-ade1-47cb-a5d3-477b4ae66b7d', {
 
     // ====== VERIFICAR STATUS REAL DO PEDIDO ======
 // ====== VERIFICAR STATUS REAL DO PEDIDO ======
+// ====== VERIFICAR STATUS REAL DO PEDIDO ======
 window.addEventListener('DOMContentLoaded', async function() {
   var params = new URLSearchParams(window.location.search);
 
   var statusUrl = params.get('status');
-  var orderId = params.get('orderId');
+  var orderId =
+    params.get('external_reference') ||
+    params.get('orderId');
 
   if (!orderId) {
-    console.log('Nenhum orderId encontrado na URL.');
+    console.log('Nenhum identificador de pedido encontrado na URL.');
     return;
   }
+
+  console.log('Consultando pedido:', orderId);
 
   try {
     var response = await fetch(
@@ -757,22 +762,38 @@ window.addEventListener('DOMContentLoaded', async function() {
       alert(
         '✅ Pagamento aprovado! Seu pedido está sendo processado e chegará em 2-3 dias úteis.'
       );
-    } else if (data.status === 'pending') {
+
+    } else if (
+      data.status === 'pending' ||
+      statusUrl === 'pending'
+    ) {
       alert(
         '⏳ Pagamento pendente. Assim que for confirmado, seu pedido será enviado.'
       );
-    } else if (data.status === 'rejected') {
+
+    } else if (
+      data.status === 'rejected' ||
+      statusUrl === 'failure'
+    ) {
       alert(
         '❌ Pagamento não aprovado. Tente novamente ou finalize via WhatsApp.'
       );
+
     } else {
-      console.log('Pedido ainda sem status final:', data.status);
+      console.log(
+        'Pedido ainda sem status final:',
+        data.status
+      );
     }
 
   } catch (error) {
-    console.error('Erro ao consultar status do pedido:', error);
+    console.error(
+      'Erro ao consultar status do pedido:',
+      error
+    );
   }
-});
-  </script>
+});  
+
+</script>
 </body>
 </html>
