@@ -648,21 +648,25 @@
     alert('Por favor, preencha seu nome, e-mail e WhatsApp.');
     return;
   }
+
   if (cart.length === 0) {
     alert('Seu carrinho está vazio.');
     return;
   }
 
   var pedidoId = gerarPedidoId();
-  checkoutBtn.textContent = 'Iniciando pagamento...';
+
+  checkoutBtn.textContent = 'Preparando pagamento...';
   checkoutBtn.disabled = true;
 
   try {
     var response = await fetch('/.netlify/functions/create-preference', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
-        origin: window.location.origin, // ADICIONADO: Necessário para o backend
+        origin: window.location.origin,
         items: cart.map(function(item) {
           return {
             title: item.name,
@@ -671,21 +675,76 @@
             currency_id: 'BRL'
           };
         }),
-        payer: { name: nome, email: email, phone: { number: telefone } },
+        payer: {
+          name: nome,
+          email: email,
+          phone: {
+            number: telefone
+          }
+        },
         external_reference: pedidoId
       })
     });
 
     var data = await response.json();
-    if (!data.preferenceId) throw new Error('Falha ao gerar ID de pagamento');
 
-    // Abre o Checkout Pro (Redirecionamento) - Mais estável para iniciantes
-    window.location.href = data.init_point; 
+    if (!response.ok || !data.preferenceId) {
+      throw new Error(
+        data.error || 'Falha ao criar preferência de pagamento'
+      );
+    }
+
+    // Inicializa o Mercado Pago somente depois de receber a preferência
+    var mp = new MercadoPago(
+      'APP_USR-6768923654874923-090822',
+      {
+        locale: 'pt-BR'
+      }
+    );
+
+    var bricksBuilder = mp.bricks();
+
+    // Remove eventual botão Brick anterior
+    var container = document.getElementById('walletBrick_container');
+    container.innerHTML = '';
+
+    // Esconde o botão HTML antigo
+    checkoutBtn.style.display = 'none';
+
+    // Cria o botão oficial do Mercado Pago
+    await bricksBuilder.create(
+      'wallet',
+      'walletBrick_container',
+      {
+        initialization: {
+          preferenceId: data.preferenceId,
+          redirectMode: 'self'
+        },
+        callbacks: {
+          onReady: function() {
+            console.log('Wallet Brick pronto.');
+          },
+          onSubmit: function() {
+            console.log('Checkout Mercado Pago iniciado.');
+          },
+          onError: function(error) {
+            console.error('Erro no Wallet Brick:', error);
+            checkoutBtn.style.display = '';
+            checkoutBtn.disabled = false;
+            checkoutBtn.textContent = 'Pagar com Mercado Pago';
+          }
+        }
+      }
+    );
 
   } catch (error) {
-    console.error('Erro:', error);
-    alert('Erro ao iniciar pagamento. Finalize via WhatsApp.');
-    abrirWhatsAppCheckout();
+    console.error('Erro ao iniciar pagamento:', error);
+
+    checkoutBtn.style.display = '';
+    checkoutBtn.disabled = false;
+    checkoutBtn.textContent = 'Pagar com Mercado Pago';
+
+    alert('Erro ao iniciar pagamento. Tente novamente.');
   }
 }
       
