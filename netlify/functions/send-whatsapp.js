@@ -54,19 +54,15 @@ Dúvidas? Responda aqui ou ligue (31) 98481-5086.`;
 
     const result = await response.json();
 
-    if (!response.ok) throw new Error(result.error?.message || "Erro na API do WhatsApp");
+    if (!response.ok) {
+  console.error(
+    "WhatsApp API ERROR:",
+    JSON.stringify(result, null, 2)
+  );
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ success: true, waId: result.messages?.[0]?.id }),
-    };
-  } catch (error) {
-    console.error("Erro WhatsApp:", error.message);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: error.message }),
-    };
-  }
-};
+  throw new Error(
+    result.error?.message ||
+    `Erro na API do WhatsApp (HTTP ${response.status})`
+  );
+}
+
