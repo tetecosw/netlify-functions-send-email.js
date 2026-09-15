@@ -1,4 +1,8 @@
 const { connectLambda, getStore } = require('@netlify/blobs');
+const {
+  WebhookSignatureValidator,
+  InvalidWebhookSignatureError
+} = require('mercadopago');
 
 exports.handler = async (event) => {
   // Inicializa o contexto do Netlify Blobs
@@ -33,6 +37,79 @@ exports.handler = async (event) => {
 
   try {
     const body = JSON.parse(event.body || '{}');
+    // ==========================================================
+    // VALIDAÇÃO DA ASSINATURA DO WEBHOOK MERCADO PAGO
+    // ==========================================================
+    const signature =
+      event.headers?.['x-signature'] ||
+      event.headers?.['X-Signature'];
+
+    const requestId =
+      event.headers?.['x-request-id'] ||
+      event.headers?.['X-Request-Id'];
+
+    // O Mercado Pago envia data.id na query string do Webhook.
+    const dataId =
+      event.queryStringParameters?.['data.id'] ||
+      event.queryStringParameters?.data_id ||
+      body.data?.id ||
+      body.resource?.split('/').pop();
+
+    const secret = process.env.MP_WEBHOOK_SECRET;
+
+    if (!secret) {
+      console.error('MP_WEBHOOK_SECRET não configurado.');
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'Webhook secret não configurado'
+        })
+      };
+    }
+
+    if (!signature || !requestId || !dataId) {
+      console.error(
+        'Webhook sem x-signature, x-request-id ou data.id.'
+      );
+
+      return {
+        statusCode: 401,
+        headers,
+        body: JSON.stringify({
+          error: 'Webhook não autenticado'
+        })
+      };
+    }
+
+    try {
+      WebhookSignatureValidator.validate({
+        xSignature: signature,
+        xRequestId: requestId,
+        dataId: String(dataId),
+        secret
+      });
+
+      console.log(
+        `Assinatura do Webhook validada. Request ID: ${requestId}`
+      );
+
+    } catch (error) {
+      if (error instanceof InvalidWebhookSignatureError) {
+        console.error('Assinatura do Webhook inválida.');
+
+        return {
+          statusCode: 401,
+          headers,
+          body: JSON.stringify({
+            error: 'Assinatura do Webhook inválida'
+          })
+        };
+      }
+
+      throw error;
+    }
+
 
     // Processa somente notificações de pagamento
     if (body.type === 'payment' || body.topic === 'payment') {
