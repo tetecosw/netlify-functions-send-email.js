@@ -69,8 +69,18 @@ exports.handler = async (event) => {
     }
 
     // === 5. BUSCAR PEDIDO NO NETLIFY BLOBS ===
-    const store = getStore('orders');
-    const orderRaw = await store.get(externalReference);
+    console.log('1 - Iniciando acesso ao Netlify Blobs');
+
+const store = getStore('orders');
+
+console.log('2 - Store orders obtido');
+
+const existingOrder = await store.get(orderId);
+
+console.log(
+  '3 - Resultado da busca do pedido:',
+  existingOrder ? 'ENCONTRADO' : 'NÃO ENCONTRADO'
+);
 
     if (!orderRaw) {
       console.warn('[WEBHOOK] Pedido não encontrado: ' + externalReference);
