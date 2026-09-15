@@ -56,21 +56,35 @@ exports.handler = async (event, context) => {
       data.external_reference || `SKP_${Date.now()}`;
 
     // Preferência do Mercado Pago
-    const preference = {
-      items: data.items,
-      external_reference: orderId,
+   const siteUrl = process.env.SITE_URL;
 
-     back_urls: {
-  success: `${data.origin}/?status=success&orderId=${encodeURIComponent(orderId)}`,
-  failure: `${data.origin}/?status=failure&orderId=${encodeURIComponent(orderId)}`,
-  pending: `${data.origin}/?status=pending&orderId=${encodeURIComponent(orderId)}`
-},
+if (!siteUrl) {
+  throw new Error('SITE_URL não configurada.');
+}
 
-auto_return: 'approved',
+const preference = {
+  items: data.items,
 
-      binary_mode: true,
-      statement_descriptor: 'SKINCAREPRO'
-    };
+  payer: {
+    name: data.payer?.name || '',
+    email: data.payer?.email || '',
+    phone: {
+      number: data.payer?.phone?.number || ''
+    }
+  },
+
+  external_reference: orderId,
+
+  back_urls: {
+    success: `${siteUrl}/?status=success&orderId=${encodeURIComponent(orderId)}`,
+    failure: `${siteUrl}/?status=failure&orderId=${encodeURIComponent(orderId)}`,
+    pending: `${siteUrl}/?status=pending&orderId=${encodeURIComponent(orderId)}`
+  },
+
+  auto_return: 'approved',
+
+  statement_descriptor: 'SKINCAREPRO'
+};
 
     // Cria a preferência no Mercado Pago
     const response = await preferenceClient.create({

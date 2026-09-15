@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<script src="https://sdk.mercadopago.com/js/v2"></script>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Skincare Pro Store — Produtos Estéticos Originais para Profissionais</title>
   <meta name="description" content="Dysport, Sculptra, LineBody, Nabota, Momm, Botox Allergan e mais produtos estéticos originais num único carrinho. Entrega expressa em 2-3 dias úteis. Preço de fábrica. Nota fiscal.">
@@ -651,13 +650,13 @@
   }
 
   if (cart.length === 0) {
-    alert('Seu carrinho está vazio.');
+    alert('Seu carrinho est� vazio.');
     return;
   }
 
   var pedidoId = gerarPedidoId();
 
-  checkoutBtn.textContent = 'Preparando pagamento...';
+  checkoutBtn.textContent = 'Iniciando pagamento...';
   checkoutBtn.disabled = true;
 
   try {
@@ -689,70 +688,26 @@
 
     var data = await response.json();
 
-    if (!response.ok || !data.preferenceId) {
+    if (!response.ok || !data.preferenceId || !data.init_point) {
       throw new Error(
         data.error || 'Falha ao criar preferência de pagamento'
       );
     }
 
-    // Inicializa o Mercado Pago somente depois de receber a preferência
-    var mp = new MercadoPago(
-      'APP_USR-6768923654874923-090822',
-      {
-        locale: 'pt-BR'
-      }
-    );
-
-    var bricksBuilder = mp.bricks();
-
-    // Remove eventual botão Brick anterior
-    var container = document.getElementById('walletBrick_container');
-    container.innerHTML = '';
-
-    // Esconde o botão HTML antigo
-    checkoutBtn.style.display = 'none';
-
-    // Cria o botão oficial do Mercado Pago
-    await bricksBuilder.create(
-      'wallet',
-      'walletBrick_container',
-      {
-        initialization: {
-  preferenceId: data.preferenceId,
-  redirectMode: 'blank'
-},
-        callbacks: {
-          onReady: function() {
-            console.log('Wallet Brick pronto.');
-          },
-          onSubmit: function() {
-            console.log('Checkout Mercado Pago iniciado.');
-          },
-          onError: function(error) {
-            console.error('Erro no Wallet Brick:', error);
-            checkoutBtn.style.display = '';
-            checkoutBtn.disabled = false;
-            checkoutBtn.textContent = 'Pagar com Mercado Pago';
-          }
-        }
-      }
-    );
+    window.location.href = data.init_point;
 
   } catch (error) {
     console.error('Erro ao iniciar pagamento:', error);
 
-    checkoutBtn.style.display = '';
     checkoutBtn.disabled = false;
     checkoutBtn.textContent = 'Pagar com Mercado Pago';
 
-    alert('Erro ao iniciar pagamento. Tente novamente.');
+    alert('Erro ao iniciar pagamento. Finalize via WhatsApp.');
+    abrirWhatsAppCheckout();
   }
 }
-      
-    
 
-    // ====== FILTROS DO CATÁLOGO ======
-    document.querySelectorAll('.filter-btn').forEach(btn => {
+document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('filter-btn--active'));
         this.classList.add('filter-btn--active');
