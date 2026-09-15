@@ -206,10 +206,10 @@ exports.handler = async (event) => {
       {
         method: 'GET',
         headers: {
-          Authorization:
-            `Bearer ${process.env.MP_ACCESS_TOKEN}`,
-          'Content-Type': 'application/json'
-        }
+  Authorization:
+    'Bearer ' + process.env.MP_ACCESS_TOKEN,
+  'Content-Type': 'application/json'
+}
       }
     );
 
