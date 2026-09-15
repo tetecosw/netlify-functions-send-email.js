@@ -7,21 +7,48 @@ const client = new MercadoPagoConfig({
 
 const preferenceClient = new Preference(client);
 
-exports.handler = async (event, context) => {
+exports.handler = async (event) => {
   // Inicializa o contexto do Netlify Blobs
   connectLambda(event);
 
+  const siteUrl = process.env.SITE_URL;
+
   const headers = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': siteUrl || '*',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Content-Type': 'application/json'
   };
 
+  // Verifica configuração obrigatória
+  if (!process.env.MP_ACCESS_TOKEN) {
+    console.error('MP_ACCESS_TOKEN não configurado.');
+    
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'Mercado Pago não configurado no servidor.'
+      })
+    };
+  }
+
+  if (!siteUrl) {
+    console.error('SITE_URL não configurada.');
+
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'SITE_URL não configurada no servidor.'
+      })
+    };
+  }
+
   // Preflight CORS
   if (event.httpMethod === 'OPTIONS') {
     return {
-      statusCode: 200,
+      statusCode: 204,
       headers,
       body: ''
     };
@@ -45,51 +72,57 @@ exports.handler = async (event, context) => {
     if (
       !data.items ||
       !Array.isArray(data.items) ||
-      data.items.length === 0 ||
-      !data.origin
+      data.items.length === 0
     ) {
-      throw new Error('Dados insuficientes para criar a preferência.');
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'Nenhum item foi enviado para o pagamento.'
+        })
+      };
     }
 
     // ID do pedido
     const orderId =
-      data.external_reference || `SKP_${Date.now()}`;
+      data.external_reference ||
+      `SKP_${Date.now()}`;
 
     // Preferência do Mercado Pago
-   const siteUrl = process.env.SITE_URL;
+    const preference = {
+      items: data.items,
 
-if (!siteUrl) {
-  throw new Error('SITE_URL não configurada.');
-}
+      payer: {
+        name: data.payer?.name || '',
+        email: data.payer?.email || '',
+        phone: {
+          number: data.payer?.phone?.number || ''
+        }
+      },
 
-const preference = {
-  items: data.items,
+      external_reference: orderId,
 
-  payer: {
-    name: data.payer?.name || '',
-    email: data.payer?.email || '',
-    phone: {
-      number: data.payer?.phone?.number || ''
-    }
-  },
+      back_urls: {
+        success: `${siteUrl}/?status=success&orderId=${encodeURIComponent(orderId)}`,
+        failure: `${siteUrl}/?status=failure&orderId=${encodeURIComponent(orderId)}`,
+        pending: `${siteUrl}/?status=pending&orderId=${encodeURIComponent(orderId)}`
+      },
 
-  external_reference: orderId,
+      auto_return: 'approved',
 
-  back_urls: {
-    success: `${siteUrl}/?status=success&orderId=${encodeURIComponent(orderId)}`,
-    failure: `${siteUrl}/?status=failure&orderId=${encodeURIComponent(orderId)}`,
-    pending: `${siteUrl}/?status=pending&orderId=${encodeURIComponent(orderId)}`
-  },
-
-  auto_return: 'approved',
-
-  statement_descriptor: 'SKINCAREPRO'
-};
+      statement_descriptor: 'SKINCAREPRO'
+    };
 
     // Cria a preferência no Mercado Pago
     const response = await preferenceClient.create({
       body: preference
     });
+
+    if (!response || !response.id) {
+      throw new Error(
+        'Mercado Pago não retornou um ID de preferência.'
+      );
+    }
 
     // Inicializa o Netlify Blobs
     const store = getStore('orders');
@@ -103,7 +136,7 @@ const preference = {
       0
     );
 
-    // Salva os dados originais do pedido
+    // Salva os dados do pedido
     await store.set(
       orderId,
       JSON.stringify({
@@ -138,17 +171,17 @@ const preference = {
     };
 
   } catch (error) {
-    console.error(
-      'Erro na Function:',
-      error.message
-    );
+    console.error('Erro na Function:', error);
 
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({
         error: 'Erro ao processar pagamento',
-        details: error.message
+        details:
+          process.env.NODE_ENV === 'development'
+            ? error.message
+            : undefined
       })
     };
   }
